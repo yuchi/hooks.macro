@@ -1,5 +1,5 @@
 const { addNamed } = require('@babel/helper-module-imports');
-const { createMacro, MacroError } = require('babel-plugin-macros');
+const { createMacro } = require('babel-plugin-macros');
 
 module.exports = createMacro(memoMacro);
 
@@ -66,7 +66,8 @@ function hookTransform(path, state, macroName, hookName, autoClosure, babel) {
 
     hookCreateTransform(functionCallPath, closurePath, importedHookName, babel);
   } else {
-    throw new MacroError(
+    throw state.file.buildCodeFrameError(
+      (argument && argument.node) || path.node,
       `${macroName} must be called with a function or an arrow`,
     );
   }
@@ -96,7 +97,8 @@ function memoMacro({ references, state, babel }) {
             babel,
           );
         } else {
-          throw new MacroError(
+          throw state.file.buildCodeFrameError(
+            referencePath.node,
             `${macroName} can only be used a function, and can not be passed around as an argument.`,
           );
         }
