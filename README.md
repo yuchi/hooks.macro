@@ -136,7 +136,7 @@ To make this work I currently needed to pose some limitations. This could change
 
 2. Only variables, and not properties’ access, are trapped. This means that if you use `obj.prop` only `[obj]` will become part of the memoization invalidation keys. This is a problem for refs, and will be addressed specifically in a future release.
 
-  You can work around this limitation by creating a variable which holds the current value, such as `const { current } = ref`.
+   You can work around this limitation by creating a variable which holds the current value, such as `const { current } = ref`.
 
 3. Currently there’s no way to add additional keys for more fine grained cache invalidation. Could be an important escape hatch when you do nasty things, but in that case I’d prefer to use `useMemo`/`useCallback` directly.
 
