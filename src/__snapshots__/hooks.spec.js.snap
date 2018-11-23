@@ -1,23 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Hooks macro 1. Hooks macro: 1. Hooks macro 1`] = `
-"
-import { useAutoMemo } from './hooks.macro'
-
-console.log(useAutoMemo);
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-MacroError: useAutoMemo can only be used a function, and can not be passed around as an argument.
-"
-`;
-
-exports[`Hooks macro 2. Hooks macro: 2. Hooks macro 1`] = `
+exports[`Hooks macro › Skips globals: Skips globals 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
 function FakeComponent() {
-  const result = useAutoMemo(null);
+  const result = useAutoMemo(() => window.innerHeight);
 }
 
       ↓ ↓ ↓ ↓ ↓ ↓
@@ -28,18 +16,20 @@ var _react = require(\\"react\\");
 
 function FakeComponent() {
   var result = (0, _react.useMemo)(function () {
-    return null;
+    return window.innerHeight;
   }, []);
 }
 "
 `;
 
-exports[`Hooks macro 3. Hooks macro: 3. Hooks macro 1`] = `
+exports[`Hooks macro › Skips internal bindings with omonims: Skips internal bindings with omonims 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
 function FakeComponent() {
-  const result = useAutoMemo(() => null);
+  const v = 12;
+  const value = [1, 2, 3];
+  const result = useAutoMemo(() => value.map(v => v * 2));
 }
 
       ↓ ↓ ↓ ↓ ↓ ↓
@@ -49,20 +39,82 @@ function FakeComponent() {
 var _react = require(\\"react\\");
 
 function FakeComponent() {
+  var v = 12;
+  var value = [1, 2, 3];
   var result = (0, _react.useMemo)(function () {
-    return null;
+    return value.map(function (v) {
+      return v * 2;
+    });
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Skips internal bindings: Skips internal bindings 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = [1, 2, 3];
+  const result = useAutoMemo(() => value.map(v => v * 2));
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = [1, 2, 3];
+  var result = (0, _react.useMemo)(function () {
+    return value.map(function (v) {
+      return v * 2;
+    });
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Skips internal const bindings with omonims: Skips internal const bindings with omonims 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const v = 12;
+  const result = useAutoMemo(() => {
+    const v = 42;
+    return v;
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var v = 12;
+  var result = (0, _react.useMemo)(function () {
+    var v = 42;
+    return v;
   }, []);
 }
 "
 `;
 
-exports[`Hooks macro 4. Hooks macro: 4. Hooks macro 1`] = `
+exports[`Hooks macro › Skips internal destructuring bindings with omonims: Skips internal destructuring bindings with omonims 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
 function FakeComponent() {
-  const value = 12;
-  const result = useAutoMemo(value);
+  const v = 12;
+  const value = [1, 2, 3];
+  const result = useAutoMemo(() => {
+    const [v] = value;
+    return v;
+  });
 }
 
       ↓ ↓ ↓ ↓ ↓ ↓
@@ -72,99 +124,17 @@ function FakeComponent() {
 var _react = require(\\"react\\");
 
 function FakeComponent() {
-  var value = 12;
+  var v = 12;
+  var value = [1, 2, 3];
   var result = (0, _react.useMemo)(function () {
-    return value;
+    var v = value[0];
+    return v;
   }, [value]);
 }
 "
 `;
 
-exports[`Hooks macro 5. Hooks macro: 5. Hooks macro 1`] = `
-"
-import { useAutoMemo } from './hooks.macro'
-
-function FakeComponent() {
-  const value = 12;
-  const result = useAutoMemo(() => value);
-}
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-\\"use strict\\";
-
-var _react = require(\\"react\\");
-
-function FakeComponent() {
-  var value = 12;
-  var result = (0, _react.useMemo)(function () {
-    return value;
-  }, [value]);
-}
-"
-`;
-
-exports[`Hooks macro 6. Hooks macro: 6. Hooks macro 1`] = `
-"
-import { useAutoMemo } from './hooks.macro'
-
-function FakeComponent() {
-  const value = { a: { b: { c: 12 }} };
-  const result = useAutoMemo(value.a['b'].c);
-}
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-\\"use strict\\";
-
-var _react = require(\\"react\\");
-
-function FakeComponent() {
-  var value = {
-    a: {
-      b: {
-        c: 12
-      }
-    }
-  };
-  var result = (0, _react.useMemo)(function () {
-    return value.a['b'].c;
-  }, [value]);
-}
-"
-`;
-
-exports[`Hooks macro 7. Hooks macro: 7. Hooks macro 1`] = `
-"
-import { useAutoMemo } from './hooks.macro'
-
-function FakeComponent() {
-  const value = { a: { b: { c: 12 }} };
-  const result = useAutoMemo(() => value.a['b'].c);
-}
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-\\"use strict\\";
-
-var _react = require(\\"react\\");
-
-function FakeComponent() {
-  var value = {
-    a: {
-      b: {
-        c: 12
-      }
-    }
-  };
-  var result = (0, _react.useMemo)(function () {
-    return value.a['b'].c;
-  }, [value]);
-}
-"
-`;
-
-exports[`Hooks macro 8. Hooks macro: 8. Hooks macro 1`] = `
+exports[`Hooks macro › Skips out of component bindings: Skips out of component bindings 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
@@ -196,7 +166,127 @@ function FakeComponent() {
 "
 `;
 
-exports[`Hooks macro 9. Hooks macro: 9. Hooks macro 1`] = `
+exports[`Hooks macro › Throws if not called as function: Throws if not called as function 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+console.log(useAutoMemo);
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+MacroError: useAutoMemo can only be used a function, and can not be passed around as an argument.
+"
+`;
+
+exports[`Hooks macro › Works with external obj returning arrow: Works with external obj returning arrow 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = { a: { b: { c: 12 }} };
+  const result = useAutoMemo(() => value.a['b'].c);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = {
+    a: {
+      b: {
+        c: 12
+      }
+    }
+  };
+  var result = (0, _react.useMemo)(function () {
+    return value.a['b'].c;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with external obj: Works with external obj 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = { a: { b: { c: 12 }} };
+  const result = useAutoMemo(value.a['b'].c);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = {
+    a: {
+      b: {
+        c: 12
+      }
+    }
+  };
+  var result = (0, _react.useMemo)(function () {
+    return value.a['b'].c;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with external value returning arrow: Works with external value returning arrow 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = 12;
+  const result = useAutoMemo(() => value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = 12;
+  var result = (0, _react.useMemo)(function () {
+    return value;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with external value: Works with external value 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = 12;
+  const result = useAutoMemo(value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = 12;
+  var result = (0, _react.useMemo)(function () {
+    return value;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with function calls: Works with function calls 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
@@ -221,7 +311,7 @@ function FakeComponent() {
 "
 `;
 
-exports[`Hooks macro 10. Hooks macro: 10. Hooks macro 1`] = `
+exports[`Hooks macro › Works with function experssions: Works with function experssions 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
@@ -243,6 +333,50 @@ function FakeComponent() {
   var result = (0, _react.useMemo)(function hallo() {
     return value * 2;
   }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with null returning arrow: Works with null returning arrow 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const result = useAutoMemo(() => null);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var result = (0, _react.useMemo)(function () {
+    return null;
+  }, []);
+}
+"
+`;
+
+exports[`Hooks macro › Works with null: Works with null 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const result = useAutoMemo(null);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var result = (0, _react.useMemo)(function () {
+    return null;
+  }, []);
 }
 "
 `;

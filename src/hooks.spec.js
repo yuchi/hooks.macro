@@ -4,11 +4,11 @@ const plugin = require('babel-plugin-macros');
 
 pluginTester({
   plugin,
-  pluginName: 'Hooks macro',
+  pluginName: 'Hooks macro ›',
   snapshot: true,
   tests: withFilename([
     {
-      name: 'Throws if not called as function',
+      title: 'Throws if not called as function',
       error: true,
       code: `
         import { useAutoMemo } from './hooks.macro'
@@ -17,7 +17,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with null',
+      title: 'Works with null',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -27,7 +27,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with null returning arrow',
+      title: 'Works with null returning arrow',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -37,7 +37,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with external value',
+      title: 'Works with external value',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -48,7 +48,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with external value returning arrow',
+      title: 'Works with external value returning arrow',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -59,7 +59,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with external obj',
+      title: 'Works with external obj',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -70,7 +70,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with external obj returning arrow',
+      title: 'Works with external obj returning arrow',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -81,7 +81,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Skips out of component bindings',
+      title: 'Skips out of component bindings',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -93,7 +93,69 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with function calls',
+      title: 'Skips internal bindings',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = [1, 2, 3];
+          const result = useAutoMemo(() => value.map(v => v * 2));
+        }
+      `,
+    },
+    {
+      title: 'Skips internal bindings with omonims',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const v = 12;
+          const value = [1, 2, 3];
+          const result = useAutoMemo(() => value.map(v => v * 2));
+        }
+      `,
+    },
+    {
+      title: 'Skips internal destructuring bindings with omonims',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const v = 12;
+          const value = [1, 2, 3];
+          const result = useAutoMemo(() => {
+            const [v] = value;
+            return v;
+          });
+        }
+      `,
+    },
+    {
+      title: 'Skips internal const bindings with omonims',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const v = 12;
+          const result = useAutoMemo(() => {
+            const v = 42;
+            return v;
+          });
+        }
+      `,
+    },
+    {
+      title: 'Skips globals',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const result = useAutoMemo(() => window.innerHeight);
+        }
+      `,
+    },
+    {
+      title: 'Works with function calls',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -104,7 +166,7 @@ pluginTester({
       `,
     },
     {
-      name: 'Works with function experssions',
+      title: 'Works with function experssions',
       code: `
         import { useAutoMemo } from './hooks.macro'
 
