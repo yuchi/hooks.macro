@@ -76,6 +76,9 @@ function hookTransform(path, state, macroName, hookName, autoClosure, babel) {
 const CONFIGS = [
   ['useAutoMemo', 'useMemo', true],
   ['useAutoCallback', 'useCallback', false],
+  ['useAutoEffect', 'useEffect', false],
+  ['useAutoMutationEffect', 'useMutationEffect', false],
+  ['useAutoLayoutEffect', 'useLayoutEffect', false],
 ];
 
 function memoMacro({ references, state, babel }) {
