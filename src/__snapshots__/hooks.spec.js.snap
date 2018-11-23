@@ -337,6 +337,30 @@ function FakeComponent() {
 "
 `;
 
+exports[`Hooks macro › Works with multiple identical expressions: Works with multiple identical expressions 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = 12;
+  const result = useAutoMemo(value * value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = 12;
+  var result = (0, _react.useMemo)(function () {
+    return value * value;
+  }, [value]);
+}
+"
+`;
+
 exports[`Hooks macro › Works with null returning arrow: Works with null returning arrow 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'

@@ -178,6 +178,17 @@ pluginTester({
         }
       `,
     },
+    {
+      title: 'Works with multiple identical expressions',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          const result = useAutoMemo(value * value);
+        }
+      `,
+    },
   ]),
 });
 
