@@ -19,12 +19,12 @@ yarn add --dev hooks.macro
 Replace:
 
 ```js
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 function MyComponent({ labels }) {
   const myComputation = useMemo(
     () => labels.map(label => label.toUpperCase()),
-    [labels]
+    [labels],
   );
 }
 ```
@@ -32,11 +32,11 @@ function MyComponent({ labels }) {
 With:
 
 ```js
-import { useAutoMemo } from "hooks.macro";
+import { useAutoMemo } from 'hooks.macro';
 
 function MyComponent({ labels }) {
   const myComputation = useAutoMemo(() =>
-    labels.map(label => label.toUpperCase())
+    labels.map(label => label.toUpperCase()),
   );
 }
 ```
@@ -44,7 +44,7 @@ function MyComponent({ labels }) {
 Or even:
 
 ```js
-import { useAutoMemo } from "hooks.macro";
+import { useAutoMemo } from 'hooks.macro';
 
 function MyComponent({ labels }) {
   const myComputation = useAutoMemo(labels.map(label => label.toUpperCase()));
@@ -60,7 +60,7 @@ Exactly like React’s `useMemo` but automatically identifies value dependencies
 Can be passed a factory function or directly a value, will convert the latter to a function for you.
 
 ```js
-import { useAutoMemo } from "hooks.macro";
+import { useAutoMemo } from 'hooks.macro';
 ```
 
 ```js
@@ -79,7 +79,7 @@ useMemo(() => value, [value]);
 Exactly like React’s `useMemo` but automatically identifies value dependencies.
 
 ```js
-import { useAutoCallback } from "hooks.macro";
+import { useAutoCallback } from 'hooks.macro';
 ```
 
 ```js
@@ -95,17 +95,48 @@ useCallback(
   () => {
     doSomethingWith(value);
   },
-  [doSomethingWith, value]
+  [doSomethingWith, value],
+);
+```
+
+### `useAutoEffect`, `useAutoMutationEffect`, `useAutoLayoutEffect`
+
+They work exactly like their standard React counterpart, but they automatically identify value dependencies.
+
+```js
+import {
+  useAutoEffect,
+  useAutoMutationEffect,
+  useAutoLayoutEffect,
+} from 'hooks.macro';
+```
+
+```js
+useAutoEffect(() => {
+  doSomethingWith(value);
+});
+```
+
+Becomes:
+
+```js
+useEffect(
+  () => {
+    doSomethingWith(value);
+  },
+  [doSomethingWith, value],
 );
 ```
 
 ## Limitations
 
-To make this work I currently needed to pose some limitations. This could change in the future (PR ___very___ welcome).
+To make this work I currently needed to pose some limitations. This could change in the future (PR **_very_** welcome).
 
 1. Only variables created in the scope of the component body are automatically trapped as value dependencies.
 
 2. Only variables, and not properties’ access, are trapped. This means that if you use `obj.prop` only `[obj]` will become part of the memoization invalidation keys. This is a problem for refs, and will be addressed specifically in a future release.
+
+  You can work around this limitation by creating a variable which holds the current value, such as `const { current } = ref`.
 
 3. Currently there’s no way to add additional keys for more fine grained cache invalidation. Could be an important escape hatch when you do nasty things, but in that case I’d prefer to use `useMemo`/`useCallback` directly.
 
