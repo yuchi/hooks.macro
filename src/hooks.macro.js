@@ -4,24 +4,13 @@ const { createMacro, MacroError } = require('babel-plugin-macros');
 module.exports = createMacro(memoMacro);
 
 function ensureParentScopeBinding(parentPath, path) {
-  const parentScope = parentPath.scope;
-  const name = path.node.name;
+  const binding = path.scope.getBinding(path.node.name);
 
-  if (!parentPath.scope.hasOwnBinding(path.node.name)) {
+  if (binding == null) {
     return false;
   }
 
-  let scope = path.scope;
-
-  while (scope && scope !== parentScope) {
-    if (scope.hasOwnBinding(name)) {
-      return false;
-    }
-
-    scope = scope.path.parent.scope;
-  }
-
-  return true;
+  return binding.scope === parentPath.scope;
 }
 
 function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
@@ -39,7 +28,11 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
           // Excluding bindings outside of the component
           ensureParentScopeBinding(parentPath, path)
         ) {
-          references.push(path.node);
+          if (
+            !references.some(reference => reference.name === path.node.name)
+          ) {
+            references.push(path.node);
+          }
         }
       }
     },
@@ -53,7 +46,7 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
   );
 }
 
-function hookTransform(path, state, hookName, babel) {
+function hookTransform(path, state, macroName, hookName, autoClosure, babel) {
   const { types: t } = babel;
 
   const importedHookName = addNamed(path, hookName, 'react');
@@ -62,18 +55,20 @@ function hookTransform(path, state, hookName, babel) {
 
   const argument = functionCallPath.get('arguments.0');
 
-  let references = [];
-
   if (
-    !t.isArrowFunctionExpression(argument) &&
-    !t.isFunctionExpression(argument)
+    t.isArrowFunctionExpression(argument) ||
+    t.isFunctionExpression(argument)
   ) {
+    hookCreateTransform(functionCallPath, argument, importedHookName, babel);
+  } else if (autoClosure) {
     const closure = t.arrowFunctionExpression([], argument.node);
     const { 0: closurePath } = argument.replaceWith(closure);
 
     hookCreateTransform(functionCallPath, closurePath, importedHookName, babel);
   } else {
-    hookCreateTransform(functionCallPath, argument, importedHookName, babel);
+    throw new MacroError(
+      `${macroName} must be called with a function or an arrow`,
+    );
   }
 }
 
@@ -92,10 +87,17 @@ function memoMacro({ references, state, babel }) {
           t.isCallExpression(referencePath.parentPath) &&
           referencePath.parentPath.node.callee === referencePath.node
         ) {
-          hookTransform(referencePath, state, hookName, babel);
+          hookTransform(
+            referencePath,
+            state,
+            macroName,
+            hookName,
+            autoClosure,
+            babel,
+          );
         } else {
           throw new MacroError(
-            `useAutoMemo can only be used a function, and can not be passed around as an argument.`,
+            `${macroName} can only be used a function, and can not be passed around as an argument.`,
           );
         }
       });
