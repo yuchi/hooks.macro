@@ -76,7 +76,7 @@ useMemo(() => value, [value]);
 
 ### `useAutoCallback`
 
-Exactly like React’s `useMemo` but automatically identifies value dependencies.
+Exactly like React’s `useCallback` but automatically identifies value dependencies.
 
 ```js
 import { useAutoCallback } from 'hooks.macro';
