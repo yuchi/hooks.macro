@@ -1,0 +1,248 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hooks macro 1. Hooks macro: 1. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+console.log(useAutoMemo);
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+MacroError: useAutoMemo can only be used a function, and can not be passed around as an argument.
+"
+`;
+
+exports[`Hooks macro 2. Hooks macro: 2. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const result = useAutoMemo(null);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var result = (0, _react.useMemo)(function () {
+    return null;
+  }, []);
+}
+"
+`;
+
+exports[`Hooks macro 3. Hooks macro: 3. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const result = useAutoMemo(() => null);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var result = (0, _react.useMemo)(function () {
+    return null;
+  }, []);
+}
+"
+`;
+
+exports[`Hooks macro 4. Hooks macro: 4. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = 12;
+  const result = useAutoMemo(value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = 12;
+  var result = (0, _react.useMemo)(function () {
+    return value;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro 5. Hooks macro: 5. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = 12;
+  const result = useAutoMemo(() => value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = 12;
+  var result = (0, _react.useMemo)(function () {
+    return value;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro 6. Hooks macro: 6. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = { a: { b: { c: 12 }} };
+  const result = useAutoMemo(value.a['b'].c);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = {
+    a: {
+      b: {
+        c: 12
+      }
+    }
+  };
+  var result = (0, _react.useMemo)(function () {
+    return value.a['b'].c;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro 7. Hooks macro: 7. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = { a: { b: { c: 12 }} };
+  const result = useAutoMemo(() => value.a['b'].c);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = {
+    a: {
+      b: {
+        c: 12
+      }
+    }
+  };
+  var result = (0, _react.useMemo)(function () {
+    return value.a['b'].c;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro 8. Hooks macro: 8. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+const value = { a: { b: { c: 12 }} };
+
+function FakeComponent() {
+  const result = useAutoMemo(() => value.a['b'].c);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+var value = {
+  a: {
+    b: {
+      c: 12
+    }
+  }
+};
+
+function FakeComponent() {
+  var result = (0, _react.useMemo)(function () {
+    return value.a['b'].c;
+  }, []);
+}
+"
+`;
+
+exports[`Hooks macro 9. Hooks macro: 9. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  function callback() {}
+  const result = useAutoMemo(() => callback());
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  function callback() {}
+
+  var result = (0, _react.useMemo)(function () {
+    return callback();
+  }, [callback]);
+}
+"
+`;
+
+exports[`Hooks macro 10. Hooks macro: 10. Hooks macro 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const value = 12;
+  const result = useAutoMemo(function hallo() {
+    return value * 2;
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var value = 12;
+  var result = (0, _react.useMemo)(function hallo() {
+    return value * 2;
+  }, [value]);
+}
+"
+`;
