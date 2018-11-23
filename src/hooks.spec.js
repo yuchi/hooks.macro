@@ -166,7 +166,7 @@ pluginTester({
       `,
     },
     {
-      title: 'Works with function experssions',
+      title: 'Works with function expressions',
       code: `
         import { useAutoMemo } from './hooks.macro'
 

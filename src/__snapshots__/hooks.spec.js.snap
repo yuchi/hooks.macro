@@ -311,7 +311,7 @@ function FakeComponent() {
 "
 `;
 
-exports[`Hooks macro › Works with function experssions: Works with function experssions 1`] = `
+exports[`Hooks macro › Works with function expressions: Works with function expressions 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
 
