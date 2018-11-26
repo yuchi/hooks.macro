@@ -152,6 +152,8 @@ To make this work I currently needed to pose some limitations. This could change
 
 3. Currently there’s no way to add additional keys for more fine grained cache invalidation. Could be an important escape hatch when you do nasty things, but in that case I’d prefer to use `useMemo`/`useCallback` directly.
 
+4. Only locally defined functions declarations and explicit function expressions (`let x = () => {}`) are traversed for indirect dependencies — all other function calls (such as `xxx()`) are treated as normal input dependencies and appended too. This is unnecessary (but not harmful) for setters coming from `useState`, and not an issue at all if the function is the result of `useCallback` or `useAutoCallback`.
+
 ## Inspiration
 
 React [documentation about `useMemo`][0] and [`use*Effect`][1] hooks cites: (emphasis mine)
