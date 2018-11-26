@@ -189,6 +189,140 @@ pluginTester({
         }
       `,
     },
+    {
+      title: 'Works with funcs from props',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ onSomething }) {
+          const value = 12;
+          const result = useAutoMemo(() => onSomething(value));
+        }
+      `,
+    },
+    {
+      title: 'Works with funcs from props, again',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ onSomething }) {
+          const value = 12;
+          const result = useAutoMemo(() => { onSomething(value) });
+        }
+      `,
+    },
+    {
+      title: 'Works with indirect dependencies (function declaration)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          const result = useAutoMemo(() => getDoubleValue());
+
+          function getDoubleValue() {
+            return value * 2;
+          }
+        }
+      `,
+    },
+    {
+      title: 'Works with indirect dependencies (function expression)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          const getDoubleValue = function() {
+            return value * 2;
+          }
+
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      title: 'Works with indirect dependencies (arrow with expr)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          const getDoubleValue = () => value * 2;
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      title: 'Works with indirect dependencies (arrow with body)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          const getDoubleValue = () => {
+            return value * 2;
+          }
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      title: 'Works with indirect `let` dependencies (arrow with expr)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          let getDoubleValue = () => value * 2;
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      title: 'Works with indirect `let` dependencies (arrow with body)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          let getDoubleValue = () => {
+            return value * 2;
+          }
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      title: 'Works with doubly indirect dependencies',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const value = 12;
+          function getValue() {
+            return value;
+          }
+          function getDoubleValue() {
+            return getValue() * 2;
+          }
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      title: 'Works with doubly indirect dependencies on props',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ getValue }) {
+          function getDoubleValue() {
+            return getValue() * 2;
+          }
+          const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
   ]),
 });
 

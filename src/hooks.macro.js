@@ -7,10 +7,59 @@ function ensureParentScopeBinding(parentPath, path) {
   const binding = path.scope.getBinding(path.node.name);
 
   if (binding == null) {
-    return false;
+    return null;
   }
 
-  return binding.scope === parentPath.scope;
+  if (binding.scope !== parentPath.scope) {
+    return null;
+  }
+
+  return binding;
+}
+
+function visitInputsReferences(parentPath, entryPath, babel, visitor) {
+  const { types: t } = babel;
+
+  entryPath.traverse({
+    Expression(path) {
+      if (!t.isIdentifier(path)) {
+        return;
+      }
+
+      const binding = ensureParentScopeBinding(parentPath, path);
+
+      // Excluding bindings outside of the component
+      if (binding == null) {
+        return;
+      }
+
+      if (t.isCallExpression(path.parentPath)) {
+        if (t.isFunctionDeclaration(binding.path)) {
+          visitInputsReferences(parentPath, binding.path, babel, visitor);
+        } else if (t.isVariableDeclarator(binding.path)) {
+          const initPath = binding.path.get('init');
+
+          if (
+            t.isArrowFunctionExpression(initPath) ||
+            t.isFunctionExpression(initPath)
+          ) {
+            visitInputsReferences(parentPath, initPath, babel, visitor);
+          } else {
+            visitor(path);
+          }
+        } else {
+          visitor(path);
+        }
+      }
+      // Excluding "b" in "a.b" form
+      else if (
+        !t.isMemberExpression(path.parentPath) ||
+        path.parentKey === 'object'
+      ) {
+        visitor(path);
+      }
+    },
+  });
 }
 
 function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
@@ -18,24 +67,10 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
 
   const references = [];
 
-  createPath.traverse({
-    Expression(path) {
-      if (t.isIdentifier(path)) {
-        if (
-          // Excluding "b" in "a.b" form
-          (!t.isMemberExpression(path.parentPath) ||
-            path.parentKey === 'object') &&
-          // Excluding bindings outside of the component
-          ensureParentScopeBinding(parentPath, path)
-        ) {
-          if (
-            !references.some(reference => reference.name === path.node.name)
-          ) {
-            references.push(path.node);
-          }
-        }
-      }
-    },
+  visitInputsReferences(parentPath, createPath, babel, ({ node }) => {
+    if (!references.some(reference => reference.name === node.name)) {
+      references.push(node);
+    }
   });
 
   parentPath.replaceWith(
