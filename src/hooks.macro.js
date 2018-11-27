@@ -3,22 +3,10 @@ const { createMacro } = require('babel-plugin-macros');
 
 module.exports = createMacro(memoMacro);
 
-function ensureParentScopeBinding(parentPath, path) {
-  const binding = path.scope.getBinding(path.node.name);
-
-  if (binding == null) {
-    return null;
-  }
-
-  if (binding.scope !== parentPath.scope) {
-    return null;
-  }
-
-  return binding;
-}
-
 function visitInputsReferences(parentPath, entryPath, babel, visitor) {
   const { types: t } = babel;
+
+  const parentScope = parentPath.scope;
 
   entryPath.traverse({
     Expression(path) {
@@ -26,38 +14,40 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
         return;
       }
 
-      const binding = ensureParentScopeBinding(parentPath, path);
+      const binding = path.scope.getBinding(path.node.name);
 
-      // Excluding bindings outside of the component
+      // Reference without a binding (such as globals) are excluded
       if (binding == null) {
         return;
       }
 
-      if (t.isCallExpression(path.parentPath)) {
-        if (t.isFunctionDeclaration(binding.path)) {
-          visitInputsReferences(parentPath, binding.path, babel, visitor);
-        } else if (t.isVariableDeclarator(binding.path)) {
-          const initPath = binding.path.get('init');
+      // Excluding bindings outside of the component
+      if (binding.scope !== parentScope) {
+        return;
+      }
 
-          if (
-            t.isArrowFunctionExpression(initPath) ||
-            t.isFunctionExpression(initPath)
-          ) {
-            visitInputsReferences(parentPath, initPath, babel, visitor);
-          } else {
-            visitor(path);
-          }
-        } else {
-          visitor(path);
+      // Reference to function declarations are skipped but traversed
+      if (t.isFunctionDeclaration(binding.path)) {
+        visitInputsReferences(parentPath, binding.path, babel, visitor);
+        return;
+      }
+
+      // All other bindings with a declaration are checked
+      if (t.isVariableDeclarator(binding.path)) {
+        const initPath = binding.path.get('init');
+
+        // Reference to explicit functions/arrows are traversed
+        if (
+          t.isArrowFunctionExpression(initPath) ||
+          t.isFunctionExpression(initPath)
+        ) {
+          visitInputsReferences(parentPath, initPath, babel, visitor);
+          return;
         }
       }
-      // Excluding "b" in "a.b" form
-      else if (
-        !t.isMemberExpression(path.parentPath) ||
-        path.parentKey === 'object'
-      ) {
-        visitor(path);
-      }
+
+      // All other bindings are included
+      visitor(path);
     },
   });
 }
