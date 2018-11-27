@@ -10,6 +10,7 @@ pluginTester({
     {
       title: 'Throws if not called as function',
       error: true,
+      snapshot: false,
       code: `
         import { useAutoMemo } from './hooks.macro'
 

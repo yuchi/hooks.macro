@@ -166,22 +166,6 @@ function FakeComponent() {
 "
 `;
 
-exports[`Hooks macro › Throws if not called as function: Throws if not called as function 1`] = `
-"
-import { useAutoMemo } from './hooks.macro'
-
-console.log(useAutoMemo);
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-SyntaxError: ./hooks.macro: /Users/pier/Development/exp/hooks.macro/src/hooks.spec.js: useAutoMemo can only be used a function, and can not be passed around as an argument.
-[0m [90m 1 | [39m[36mimport[39m { useAutoMemo } from [32m'./hooks.macro'[39m[0m
-[0m [90m 2 | [39m[0m
-[0m[31m[1m>[22m[39m[90m 3 | [39mconsole[33m.[39mlog(useAutoMemo)[33m;[39m[0m
-[0m [90m   | [39m            [31m[1m^[22m[39m[0m
-"
-`;
-
 exports[`Hooks macro › Works with doubly indirect dependencies on props: Works with doubly indirect dependencies on props 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
