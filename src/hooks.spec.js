@@ -8,13 +8,30 @@ pluginTester({
   snapshot: true,
   tests: withFilename([
     {
-      title: 'Throws if not called as function',
+      title: 'Throws if not called as function (useAutoMemo)',
       error: true,
       snapshot: false,
       code: `
         import { useAutoMemo } from './hooks.macro'
-
         console.log(useAutoMemo);
+      `,
+    },
+    {
+      title: 'Throws if not called as function (useAutoCallback)',
+      error: true,
+      snapshot: false,
+      code: `
+        import { useAutoCallback } from './hooks.macro'
+        console.log(useAutoCallback);
+      `,
+    },
+    {
+      title: 'Throws if not called as function (useAutoEffect)',
+      error: true,
+      snapshot: false,
+      code: `
+        import { useAutoEffect } from './hooks.macro'
+        console.log(useAutoEffect);
       `,
     },
     {
@@ -65,6 +82,18 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
+          const value = { a: { b: { c: 12 }} };
+          const result = useAutoMemo(value.a['b'].c);
+        }
+      `,
+    },
+    {
+      title: 'Works with external obj and conflicting bindings',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const a = 12;
           const value = { a: { b: { c: 12 }} };
           const result = useAutoMemo(value.a['b'].c);
         }
@@ -187,6 +216,16 @@ pluginTester({
         function FakeComponent() {
           const value = 12;
           const result = useAutoMemo(value * value);
+        }
+      `,
+    },
+    {
+      title: 'Works with values from props',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ propValue }) {
+          const result = useAutoMemo(() => propValue);
         }
       `,
     },
@@ -321,6 +360,41 @@ pluginTester({
             return getValue() * 2;
           }
           const result = useAutoMemo(() => getDoubleValue());
+        }
+      `,
+    },
+    {
+      // This test should error, since there’s an access-before-define
+      title: 'Is not confused by later bindings',
+      skip: true,
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ value }) {
+          const result = useAutoMemo(() => something());
+          const something = () => value;
+        }
+      `,
+    },
+    {
+      title: 'Does not create a double require() with named hook import',
+      code: `
+        import { useMemo } from 'react';
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ value }) {
+          return useAutoMemo(() => value);
+        }
+      `,
+    },
+    {
+      title: 'Does not create a double require() with default React import',
+      code: `
+        import React from 'react';
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ value }) {
+          return useAutoMemo(() => value);
         }
       `,
     },

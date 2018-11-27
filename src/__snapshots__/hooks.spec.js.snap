@@ -1,5 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Hooks macro › Does not create a double require() with default React import: Does not create a double require() with default React import 1`] = `
+"
+import React from 'react';
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ value }) {
+  return useAutoMemo(() => value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = _interopRequireWildcard(require(\\"react\\"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function FakeComponent(_ref) {
+  var value = _ref.value;
+  return (0, _react.useMemo)(function () {
+    return value;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Does not create a double require() with named hook import: Does not create a double require() with named hook import 1`] = `
+"
+import { useMemo } from 'react';
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ value }) {
+  return useAutoMemo(() => value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var value = _ref.value;
+  return (0, _react.useMemo)(function () {
+    return value;
+  }, [value]);
+}
+"
+`;
+
 exports[`Hooks macro › Skips globals: Skips globals 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
@@ -231,6 +281,38 @@ function FakeComponent() {
 
   var result = (0, _react.useMemo)(function () {
     return getDoubleValue();
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with external obj and conflicting bindings: Works with external obj and conflicting bindings 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const a = 12;
+  const value = { a: { b: { c: 12 }} };
+  const result = useAutoMemo(value.a['b'].c);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var a = 12;
+  var value = {
+    a: {
+      b: {
+        c: 12
+      }
+    }
+  };
+  var result = (0, _react.useMemo)(function () {
+    return value.a['b'].c;
   }, [value]);
 }
 "
@@ -698,6 +780,29 @@ function FakeComponent() {
   var result = (0, _react.useMemo)(function () {
     return null;
   }, []);
+}
+"
+`;
+
+exports[`Hooks macro › Works with values from props: Works with values from props 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue }) {
+  const result = useAutoMemo(() => propValue);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var propValue = _ref.propValue;
+  var result = (0, _react.useMemo)(function () {
+    return propValue;
+  }, [propValue]);
 }
 "
 `;
