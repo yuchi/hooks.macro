@@ -7,33 +7,37 @@ pluginTester({
   pluginName: 'Hooks macro ›',
   snapshot: true,
   tests: withFilename([
-    {
-      title: 'Throws if not called as function (useAutoMemo)',
+    ...[
+      'useAutoMemo',
+      'useAutoCallback',
+      'useAutoEffect',
+      'useAutoLayoutEffect',
+      'useAutoLayoutEffect',
+    ].map(macroName => ({
+      title: `Throws if not called as function (${macroName})`,
       error: true,
       snapshot: false,
       code: `
-        import { useAutoMemo } from './hooks.macro'
-        console.log(useAutoMemo);
+        import { ${macroName} } from './hooks.macro'
+        console.log(${macroName});
       `,
-    },
-    {
-      title: 'Throws if not called as function (useAutoCallback)',
+    })),
+    ...[
+      'useAutoCallback',
+      'useAutoEffect',
+      'useAutoLayoutEffect',
+      'useAutoLayoutEffect',
+    ].map(macroName => ({
+      title: `Throws if not called with a function (${macroName})`,
       error: true,
       snapshot: false,
       code: `
-        import { useAutoCallback } from './hooks.macro'
-        console.log(useAutoCallback);
+        import { ${macroName} } from './hooks.macro'
+        function FakeComponent() {
+          ${macroName}(12);
+        }
       `,
-    },
-    {
-      title: 'Throws if not called as function (useAutoEffect)',
-      error: true,
-      snapshot: false,
-      code: `
-        import { useAutoEffect } from './hooks.macro'
-        console.log(useAutoEffect);
-      `,
-    },
+    })),
     {
       title: 'Works with null',
       code: `
