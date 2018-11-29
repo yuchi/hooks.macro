@@ -411,6 +411,22 @@ pluginTester({
       `,
     },
     {
+      title: 'Is not confused by omonims in other block scopes',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          {
+            const inner = 7;
+            const result = useAutoMemo(inner * other);
+          }
+          {
+            const other = 6;
+          }
+        }
+      `,
+    },
+    {
       // Couldn’t configure @babel/plugin-proposal-do-expressions
       title: 'Is not confused by do expression scopes',
       skip: true,

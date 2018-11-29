@@ -82,6 +82,40 @@ function FakeComponent(_ref) {
 "
 `;
 
+exports[`Hooks macro › Is not confused by omonims in other block scopes: Is not confused by omonims in other block scopes 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  {
+    const inner = 7;
+    const result = useAutoMemo(inner * other);
+  }
+  {
+    const other = 6;
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  {
+    var inner = 7;
+    var result = (0, _react.useMemo)(function () {
+      return inner * other;
+    }, [inner]);
+  }
+  {
+    var _other = 6;
+  }
+}
+"
+`;
+
 exports[`Hooks macro › Skips globals: Skips globals 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
