@@ -14,6 +14,39 @@
 > yarn add react@next react-dom@next
 > ```
 
+- [Features](#features)
+- [Roadmap](#roadmap-)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Full reference](#full-reference)
+  - [`useAutoMemo`](#useautomemo)
+  - [`useAutoCallback`](#useautocallback)
+  - [`useAutoEffect`, `useAutoMutationEffect`, `useAutoLayoutEffect`](#useautoeffect-useautomutationeffect-useautolayouteffect)
+- [Limitations](#limitations)
+- [Inspiration](#inspiration)
+- [License](#license)
+
+## Features
+
+1. Extracts all references used, and adds them to the _inputs_ array.
+
+2. Traverses all functions referenced, and appends _their_ dependencies too, removing the need for unnecessary `useCallback` hooks.
+
+3. Favors strict correctness over performance, but tries to help you there too.
+
+4. By lowering the bar for high correctness, strives to make the use of `useAutoMemo` and `useAutoCallback` simple and applicable in many more contests.
+
+## Roadmap [![Help wanted!][hwb]][hw]
+
+- [ ] Create a debug/trace facility to help debugging stale cache, performance issues.
+- [ ] Create a escape hatch to signal that a reference should not be part of the inputs array.
+- [ ] Identify a rule where we can safely add property accesses to the inputs array. Very important when dealing with refs (`ref.current`).
+- [ ] Bail out on actual constants (such as primitive literals) or known non-invariant values (such as literal objects or arrays).
+- [ ] Create a `auto()` generic macro to be used with other hooks and APIs with the same signature.
+
+[hw]: https://github.com/yuchi/hooks.macro/labels/help%20wanted
+[hwb]: https://img.shields.io/badge/-Help_wanted!-8651EC.svg?longCache=true&logo=github&logoColor=white&style=flat
+
 ## Installation
 
 Requires [`babel-plugin-macros`](https://www.npmjs.com/package/babel-plugin-macros), which is already configured for you if you are using Create React App v2+.
