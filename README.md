@@ -45,7 +45,7 @@
 - [ ] Create a `auto()` generic macro to be used with other hooks and APIs with the same signature.
 
 [hw]: https://github.com/yuchi/hooks.macro/labels/help%20wanted
-[hwb]: https://img.shields.io/badge/-Help_wanted!-8651EC.svg?longCache=true&logo=github&logoColor=white&style=flat
+[hwb]: https://img.shields.io/badge/-Help_wanted!-008672.svg?longCache=true&logo=github&logoColor=white&style=flat
 
 ## Installation
 
