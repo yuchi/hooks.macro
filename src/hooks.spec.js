@@ -38,6 +38,22 @@ pluginTester({
         }
       `,
     })),
+    ...[
+      'useAutoCallback',
+      'useAutoEffect',
+      'useAutoLayoutEffect',
+      'useAutoLayoutEffect',
+    ].map(macroName => ({
+      title: `Throws if not called without arguments (${macroName})`,
+      error: true,
+      snapshot: false,
+      code: `
+        import { ${macroName} } from './hooks.macro'
+        function FakeComponent() {
+          ${macroName}();
+        }
+      `,
+    })),
     {
       title: 'Works with null',
       code: `
