@@ -50,6 +50,38 @@ function FakeComponent(_ref) {
 "
 `;
 
+exports[`Hooks macro › Is not confused by block scopes: Is not confused by block scopes 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue = 2 }) {
+  const outer = 3;
+  {
+    const inner = 7;
+    const result = useAutoMemo(outer * inner * propValue);
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var _ref$propValue = _ref.propValue,
+      propValue = _ref$propValue === void 0 ? 2 : _ref$propValue;
+  var outer = 3;
+  {
+    var inner = 7;
+    var result = (0, _react.useMemo)(function () {
+      return outer * inner * propValue;
+    }, [outer, inner, propValue]);
+  }
+}
+"
+`;
+
 exports[`Hooks macro › Skips globals: Skips globals 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'

@@ -3,6 +3,14 @@ const { createMacro } = require('babel-plugin-macros');
 
 module.exports = createMacro(memoMacro);
 
+function reachSignificantScope(t, scope) {
+  while (scope.path.parentPath && t.isBlockStatement(scope.path)) {
+    scope = scope.path.parentPath.scope;
+  }
+
+  return scope;
+}
+
 function visitInputsReferences(parentPath, entryPath, babel, visitor) {
   const { types: t } = babel;
 
@@ -22,7 +30,10 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
       }
 
       // Excluding bindings outside of the component
-      if (binding.scope !== parentScope) {
+      if (
+        reachSignificantScope(t, binding.scope) !==
+        reachSignificantScope(t, parentScope)
+      ) {
         return;
       }
 

@@ -397,6 +397,20 @@ pluginTester({
       `,
     },
     {
+      title: 'Is not confused by block scopes',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ propValue = 2 }) {
+          const outer = 3;
+          {
+            const inner = 7;
+            const result = useAutoMemo(outer * inner * propValue);
+          }
+        }
+      `,
+    },
+    {
       title: 'Does not create a double require() with named hook import',
       code: `
         import { useMemo } from 'react';
