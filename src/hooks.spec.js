@@ -411,6 +411,22 @@ pluginTester({
       `,
     },
     {
+      // Couldn’t configure @babel/plugin-proposal-do-expressions
+      title: 'Is not confused by do expression scopes',
+      skip: true,
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ propValue = 2 }) {
+          const outer = 3;
+          const result = do {
+            const inner = 7;
+            useAutoMemo(outer * inner * propValue);
+          }
+        }
+      `,
+    },
+    {
       title: 'Does not create a double require() with named hook import',
       code: `
         import { useMemo } from 'react';
