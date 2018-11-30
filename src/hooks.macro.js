@@ -54,7 +54,7 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
       }
 
       // Traverse only “constant” function references (as in “never re-assigned”)
-      if (isFunction(t, binding.path)) {
+      if (binding.constant && isFunction(t, binding.path)) {
         visitInputsReferences(parentPath, binding.path, babel, visitor);
         return;
       }
