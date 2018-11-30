@@ -11,6 +11,25 @@ function reachSignificantScope(t, scope) {
   return scope;
 }
 
+function isFunction(t, path) {
+  if (t.isFunctionDeclaration(path)) {
+    return true;
+  }
+
+  if (t.isVariableDeclarator(path)) {
+    const initPath = path.get('init');
+
+    if (
+      t.isArrowFunctionExpression(initPath) ||
+      t.isFunctionExpression(initPath)
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function visitInputsReferences(parentPath, entryPath, babel, visitor) {
   const { types: t } = babel;
 
@@ -34,28 +53,15 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
         return;
       }
 
-      // Reference to function declarations are skipped but traversed
-      if (t.isFunctionDeclaration(binding.path)) {
+      // Traverse only “constant” function references (as in “never re-assigned”)
+      if (isFunction(t, binding.path)) {
         visitInputsReferences(parentPath, binding.path, babel, visitor);
         return;
       }
-
-      // All other bindings with a declaration are checked
-      if (t.isVariableDeclarator(binding.path)) {
-        const initPath = binding.path.get('init');
-
-        // Reference to explicit functions/arrows are traversed
-        if (
-          t.isArrowFunctionExpression(initPath) ||
-          t.isFunctionExpression(initPath)
-        ) {
-          visitInputsReferences(parentPath, initPath, babel, visitor);
-          return;
-        }
-      }
-
       // All other bindings are included
-      visitor(path);
+      else {
+        visitor(path);
+      }
     },
   });
 }
