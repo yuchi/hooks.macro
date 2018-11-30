@@ -717,6 +717,36 @@ function FakeComponent() {
 "
 `;
 
+exports[`Hooks macro › Works with indirect dependencies (arrow, without call expression): Works with indirect dependencies (arrow, without call expression) 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ values, whitelist }) {
+  const valid = value => whitelist.includes(value);
+  const goodValues = useAutoMemo(values.filter(valid));
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var values = _ref.values,
+      whitelist = _ref.whitelist;
+
+  var valid = function valid(value) {
+    return whitelist.includes(value);
+  };
+
+  var goodValues = (0, _react.useMemo)(function () {
+    return values.filter(valid);
+  }, [values, whitelist]);
+}
+"
+`;
+
 exports[`Hooks macro › Works with indirect dependencies (function declaration): Works with indirect dependencies (function declaration) 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
@@ -744,6 +774,37 @@ function FakeComponent() {
 
   function getDoubleValue() {
     return value * 2;
+  }
+}
+"
+`;
+
+exports[`Hooks macro › Works with indirect dependencies (function declaration, without call expression): Works with indirect dependencies (function declaration, without call expression) 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ values, whitelist }) {
+  const goodValues = useAutoMemo(values.filter(valid));
+  function valid(value) {
+    return whitelist.includes(value);
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var values = _ref.values,
+      whitelist = _ref.whitelist;
+  var goodValues = (0, _react.useMemo)(function () {
+    return values.filter(valid);
+  }, [values, whitelist]);
+
+  function valid(value) {
+    return whitelist.includes(value);
   }
 }
 "
@@ -778,6 +839,38 @@ function FakeComponent() {
   var result = (0, _react.useMemo)(function () {
     return getDoubleValue();
   }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Works with indirect dependencies (function expression, without call expression): Works with indirect dependencies (function expression, without call expression) 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ values, whitelist }) {
+  const valid = function valid(value) {
+    return whitelist.includes(value);
+  };
+  const goodValues = useAutoMemo(values.filter(valid));
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var values = _ref.values,
+      whitelist = _ref.whitelist;
+
+  var valid = function valid(value) {
+    return whitelist.includes(value);
+  };
+
+  var goodValues = (0, _react.useMemo)(function () {
+    return values.filter(valid);
+  }, [values, whitelist]);
 }
 "
 `;

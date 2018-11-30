@@ -384,6 +384,46 @@ pluginTester({
       `,
     },
     {
+      title:
+        'Works with indirect dependencies (arrow, without call expression)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ values, whitelist }) {
+          const valid = value => whitelist.includes(value);
+          const goodValues = useAutoMemo(values.filter(valid));
+        }
+      `,
+    },
+    {
+      title:
+        'Works with indirect dependencies (function expression, without call expression)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ values, whitelist }) {
+          const valid = function valid(value) {
+            return whitelist.includes(value);
+          };
+          const goodValues = useAutoMemo(values.filter(valid));
+        }
+      `,
+    },
+    {
+      title:
+        'Works with indirect dependencies (function declaration, without call expression)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ values, whitelist }) {
+          const goodValues = useAutoMemo(values.filter(valid));
+          function valid(value) {
+            return whitelist.includes(value);
+          }
+        }
+      `,
+    },
+    {
       // This test should error, since there’s an access-before-define
       title: 'Is not confused by later bindings',
       skip: true,
