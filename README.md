@@ -10,6 +10,7 @@
 > ```
 > npm install react@next react-dom@next
 > ```
+>
 > ```
 > yarn add react@next react-dom@next
 > ```
@@ -30,18 +31,29 @@
 
 1. Extracts all references used, and adds them to the _inputs_ array.
 
-2. Traverses all functions referenced, and appends _their_ dependencies too, removing the need for unnecessary `useCallback` hooks.
+2. Favors **strict correctness over performance**, but uses **safe optimizations:**
 
-3. Favors strict correctness over performance, but tries to help you there too.
+   1. skips constants and useless memoization keys;
 
-4. By lowering the bar for high correctness, strives to make the use of `useAutoMemo` and `useAutoCallback` simple and applicable in many more contests.
+   2. traverses all functions called or referenced, and appends _their_ dependencies too, removing the need for unnecessary `useCallback` hooks.
+
+3. By lowering the bar for high correctness, strives to:
+
+   1. make the use of `useAutoMemo` and `useAutoCallback` simple and applicable in many more contests;
+
+   2. reduce the overhead of modifying an input’s semantics (for example from a constant to a prop);
+
+   3. reduce to the bare minimum cases of missed inputs — and therefore stale memoizations or effects.
+
+4. Thoroughly tested: **50+ test cases and 100% code coverage.**
 
 ## Roadmap [![Help wanted!][hwb]][hw]
 
 - [ ] Create a debug/trace facility to help debugging stale cache, performance issues.
 - [ ] Create a escape hatch to signal that a reference should not be part of the inputs array.
 - [ ] Identify a rule where we can safely add property accesses to the inputs array. Very important when dealing with refs (`ref.current`).
-- [ ] Bail out on actual constants (such as primitive literals) or known non-invariant values (such as literal objects or arrays).
+- [x] ~~Bail out on actual constants (such as primitive literals)~~ _Update: Done!_
+- [ ] Warn/error on known non-invariant values (such as literal objects or arrays) — or auto-`useAutoMemo` them!
 - [ ] Create a `auto()` generic macro to be used with other hooks and APIs with the same signature.
 
 [hw]: https://github.com/yuchi/hooks.macro/labels/help%20wanted
