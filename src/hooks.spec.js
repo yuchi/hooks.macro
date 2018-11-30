@@ -80,7 +80,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(value);
         }
       `,
@@ -91,7 +91,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(() => value);
         }
       `,
@@ -113,7 +113,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const a = 12;
+          const a = useSomething(12);
           const value = { a: { b: { c: 12 }} };
           const result = useAutoMemo(value.a['b'].c);
         }
@@ -159,7 +159,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const v = 12;
+          const v = useSomething(12);
           const value = [1, 2, 3];
           const result = useAutoMemo(() => value.map(v => v * 2));
         }
@@ -171,7 +171,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const v = 12;
+          const v = useSomething(12);
           const value = [1, 2, 3];
           const result = useAutoMemo(() => {
             const [v] = value;
@@ -186,7 +186,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const v = 12;
+          const v = useSomething(12);
           const result = useAutoMemo(() => {
             const v = 42;
             return v;
@@ -221,7 +221,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(function hallo() {
             return value * 2;
           });
@@ -234,7 +234,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(value * value);
         }
       `,
@@ -255,7 +255,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent({ onSomething }) {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(() => onSomething(value));
         }
       `,
@@ -266,7 +266,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent({ onSomething }) {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(() => { onSomething(value) });
         }
       `,
@@ -277,7 +277,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const result = useAutoMemo(() => getDoubleValue());
 
           function getDoubleValue() {
@@ -292,7 +292,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const getDoubleValue = function() {
             return value * 2;
           }
@@ -307,7 +307,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const getDoubleValue = () => value * 2;
           const result = useAutoMemo(() => getDoubleValue());
         }
@@ -319,7 +319,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           const getDoubleValue = () => {
             return value * 2;
           }
@@ -333,7 +333,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           let getDoubleValue = () => value * 2;
           const result = useAutoMemo(() => getDoubleValue());
         }
@@ -345,7 +345,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           let getDoubleValue = () => {
             return value * 2;
           }
@@ -359,7 +359,7 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent() {
-          const value = 12;
+          const value = useSomething(12);
           function getValue() {
             return value;
           }
@@ -454,9 +454,9 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent({ propValue = 2 }) {
-          const outer = 3;
+          const outer = useSomething(3);
           {
-            const inner = 7;
+            const inner = useSomething(7);
             const result = useAutoMemo(outer * inner * propValue);
           }
         }
@@ -469,11 +469,11 @@ pluginTester({
 
         function FakeComponent() {
           {
-            const inner = 7;
+            const inner = useSomething(7);
             const result = useAutoMemo(inner * other);
           }
           {
-            const other = 6;
+            const other = useSomething(6);
           }
         }
       `,
@@ -486,9 +486,9 @@ pluginTester({
         import { useAutoMemo } from './hooks.macro'
 
         function FakeComponent({ propValue = 2 }) {
-          const outer = 3;
+          const outer = useSomething(3);
           const result = do {
-            const inner = 7;
+            const inner = useSomething(7);
             useAutoMemo(outer * inner * propValue);
           }
         }
