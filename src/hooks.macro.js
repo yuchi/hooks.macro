@@ -30,6 +30,24 @@ function isFunction(t, path) {
   return false;
 }
 
+function isImmutableLiteral(t, path) {
+  if (t.isVariableDeclarator(path)) {
+    const initPath = path.get('init');
+
+    if (
+      t.isBigIntLiteral(initPath) ||
+      t.isBooleanLiteral(initPath) ||
+      t.isNullLiteral(initPath) ||
+      t.isNumericLiteral(initPath) ||
+      t.isStringLiteral(initPath)
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function visitInputsReferences(parentPath, entryPath, babel, visitor) {
   const { types: t } = babel;
 
@@ -53,15 +71,21 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
         return;
       }
 
-      // Traverse only “constant” function references (as in “never re-assigned”)
-      if (binding.constant && isFunction(t, binding.path)) {
-        visitInputsReferences(parentPath, binding.path, babel, visitor);
-        return;
+      if (binding.constant) {
+        // Traverse only “constant” function references (as in “never re-assigned”)
+        if (isFunction(t, binding.path)) {
+          visitInputsReferences(parentPath, binding.path, babel, visitor);
+          return;
+        }
+
+        // Skip known immutables (numbers, booleans), they will never change
+        if (isImmutableLiteral(t, binding.path)) {
+          return;
+        }
       }
+
       // All other bindings are included
-      else {
-        visitor(path);
-      }
+      visitor(path);
     },
   });
 }
