@@ -516,6 +516,55 @@ pluginTester({
         }
       `,
     },
+    {
+      title: 'Skips numeric constants',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const literal = 3.5;
+          const value = useSomething(12);
+          return useAutoMemo(() => literal * value);
+        }
+      `,
+    },
+    {
+      title: 'Skips immutable constants',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          const number = 3.5;
+          const string = 'hallo';
+          const nullish = null;
+          const value = useSomething(12);
+          return useAutoMemo(() => [value, number, string, nullish]);
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by default assignments',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ number = 12 }) {
+          return useAutoMemo(() => number);
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by re-assignments over literal',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent() {
+          let literal = 3.5;
+          literal = Math.random();
+          const value = useSomething(12);
+          return useAutoMemo(() => literal * value);
+        }
+      `,
+    },
   ]),
 });
 

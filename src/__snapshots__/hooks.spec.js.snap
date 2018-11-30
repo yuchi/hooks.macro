@@ -82,6 +82,30 @@ function FakeComponent(_ref) {
 "
 `;
 
+exports[`Hooks macro › Is not confused by default assignments: Is not confused by default assignments 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ number = 12 }) {
+  return useAutoMemo(() => number);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var _ref$number = _ref.number,
+      number = _ref$number === void 0 ? 12 : _ref$number;
+  return (0, _react.useMemo)(function () {
+    return number;
+  }, [number]);
+}
+"
+`;
+
 exports[`Hooks macro › Is not confused by omonims in other block scopes: Is not confused by omonims in other block scopes 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
@@ -112,6 +136,34 @@ function FakeComponent() {
   {
     var _other = useSomething(6);
   }
+}
+"
+`;
+
+exports[`Hooks macro › Is not confused by re-assignments over literal: Is not confused by re-assignments over literal 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  let literal = 3.5;
+  literal = Math.random();
+  const value = useSomething(12);
+  return useAutoMemo(() => literal * value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var literal = 3.5;
+  literal = Math.random();
+  var value = useSomething(12);
+  return (0, _react.useMemo)(function () {
+    return literal * value;
+  }, [literal, value]);
 }
 "
 `;
@@ -165,6 +217,36 @@ function FakeComponent() {
   var result = (0, _react.useMemo)(function () {
     return window.innerHeight;
   }, []);
+}
+"
+`;
+
+exports[`Hooks macro › Skips immutable constants: Skips immutable constants 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const number = 3.5;
+  const string = 'hallo';
+  const nullish = null;
+  const value = useSomething(12);
+  return useAutoMemo(() => [value, number, string, nullish]);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var number = 3.5;
+  var string = 'hallo';
+  var nullish = null;
+  var value = useSomething(12);
+  return (0, _react.useMemo)(function () {
+    return [value, number, string, nullish];
+  }, [value]);
 }
 "
 `;
@@ -276,6 +358,32 @@ function FakeComponent() {
   var result = (0, _react.useMemo)(function () {
     var v = value[0];
     return v;
+  }, [value]);
+}
+"
+`;
+
+exports[`Hooks macro › Skips numeric constants: Skips numeric constants 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent() {
+  const literal = 3.5;
+  const value = useSomething(12);
+  return useAutoMemo(() => literal * value);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent() {
+  var literal = 3.5;
+  var value = useSomething(12);
+  return (0, _react.useMemo)(function () {
+    return literal * value;
   }, [value]);
 }
 "
