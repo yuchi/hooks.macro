@@ -14,7 +14,7 @@ function reachSignificantScope(t, scope) {
 function visitInputsReferences(parentPath, entryPath, babel, visitor) {
   const { types: t } = babel;
 
-  const parentScope = parentPath.scope;
+  const parentScope = reachSignificantScope(t, parentPath.scope);
 
   entryPath.traverse({
     Expression(path) {
@@ -30,10 +30,7 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
       }
 
       // Excluding bindings outside of the component
-      if (
-        reachSignificantScope(t, binding.scope) !==
-        reachSignificantScope(t, parentScope)
-      ) {
+      if (reachSignificantScope(t, binding.scope) !== parentScope) {
         return;
       }
 
