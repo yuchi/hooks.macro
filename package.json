@@ -10,7 +10,7 @@
     "test": "jest",
     "test:update": "jest --updateSnapshot",
     "build": "babel src/hooks.macro.js -d build",
-    "format": "prettier --write \"**/*.ts\" \"**/*.json\" \"**/*.js\""
+    "format": "prettier --write \"**/*.ts\" \"**/*.json\" \"**/*.js\" \"**/*.md\""
   },
   "dependencies": {
     "@babel/helper-module-imports": "^7.0.0",
