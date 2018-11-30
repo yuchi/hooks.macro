@@ -437,6 +437,18 @@ pluginTester({
       `,
     },
     {
+      title: 'Is not confused by re-assignments',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ value }) {
+          let fn = () => value;
+          fn = 14;
+          return useAutoMemo(() => fn());
+        }
+      `,
+    },
+    {
       title: 'Is not confused by block scopes',
       code: `
         import { useAutoMemo } from './hooks.macro'

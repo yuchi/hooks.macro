@@ -116,6 +116,37 @@ function FakeComponent() {
 "
 `;
 
+exports[`Hooks macro › Is not confused by re-assignments: Is not confused by re-assignments 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ value }) {
+  let fn = () => value;
+  fn = 14;
+  return useAutoMemo(() => fn());
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var value = _ref.value;
+
+  var fn = function fn() {
+    return value;
+  };
+
+  fn = 14;
+  return (0, _react.useMemo)(function () {
+    return fn();
+  }, [fn]);
+}
+"
+`;
+
 exports[`Hooks macro › Skips globals: Skips globals 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
