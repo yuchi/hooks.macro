@@ -11,9 +11,9 @@ function reachSignificantScope(t, scope) {
   return scope;
 }
 
-function isFunction(t, path) {
+function getDirectFunctionInitPath(t, path) {
   if (t.isFunctionDeclaration(path)) {
-    return true;
+    return path;
   }
 
   if (t.isVariableDeclarator(path)) {
@@ -23,11 +23,11 @@ function isFunction(t, path) {
       t.isArrowFunctionExpression(initPath) ||
       t.isFunctionExpression(initPath)
     ) {
-      return true;
+      return initPath;
     }
   }
 
-  return false;
+  return null;
 }
 
 function isImmutableLiteral(t, path) {
@@ -48,7 +48,26 @@ function isImmutableLiteral(t, path) {
   return false;
 }
 
-function visitInputsReferences(parentPath, entryPath, babel, visitor) {
+function guardFromRecursion(visitedEntryNodes, node) {
+  if (visitedEntryNodes.includes(node)) {
+    return false;
+  } else {
+    visitedEntryNodes.push(node);
+    return true;
+  }
+}
+
+function visitInputsReferences(
+  parentPath,
+  entryPath,
+  babel,
+  visitedEntryNodes,
+  visitor,
+) {
+  if (!guardFromRecursion(visitedEntryNodes, entryPath.node)) {
+    return;
+  }
+
   const { types: t } = babel;
 
   const parentScope = reachSignificantScope(t, parentPath.scope);
@@ -72,9 +91,17 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
       }
 
       if (binding.constant) {
+        const functionInitPath = getDirectFunctionInitPath(t, binding.path);
+
         // Traverse only “constant” function references (as in “never re-assigned”)
-        if (isFunction(t, binding.path)) {
-          visitInputsReferences(parentPath, binding.path, babel, visitor);
+        if (functionInitPath) {
+          visitInputsReferences(
+            parentPath,
+            functionInitPath,
+            babel,
+            visitedEntryNodes,
+            visitor,
+          );
           return;
         }
 
@@ -93,13 +120,20 @@ function visitInputsReferences(parentPath, entryPath, babel, visitor) {
 function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
   const { types: t } = babel;
 
+  const visitedEntryNodes = [];
   const references = [];
 
-  visitInputsReferences(parentPath, createPath, babel, ({ node }) => {
-    if (!references.some(reference => reference.name === node.name)) {
-      references.push(node);
-    }
-  });
+  visitInputsReferences(
+    parentPath,
+    createPath,
+    babel,
+    visitedEntryNodes,
+    ({ node }) => {
+      if (!references.some(reference => reference.name === node.name)) {
+        references.push(node);
+      }
+    },
+  );
 
   parentPath.replaceWith(
     t.callExpression(importedHookName, [
