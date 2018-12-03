@@ -106,6 +106,43 @@ function FakeComponent(_ref) {
 "
 `;
 
+exports[`Hooks macro › Is not confused by indirect recursive functions: Is not confused by indirect recursive functions 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue }) {
+  return useAutoMemo(first());
+  function first() {
+    return propValue > 0 ? second() : propValue + 1;
+  }
+  function second() {
+    return propValue < 0 ? first() : propValue + 2;
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var propValue = _ref.propValue;
+  return (0, _react.useMemo)(function () {
+    return first();
+  }, [propValue]);
+
+  function first() {
+    return propValue > 0 ? second() : propValue + 1;
+  }
+
+  function second() {
+    return propValue < 0 ? first() : propValue + 2;
+  }
+}
+"
+`;
+
 exports[`Hooks macro › Is not confused by omonims in other block scopes: Is not confused by omonims in other block scopes 1`] = `
 "
 import { useAutoMemo } from './hooks.macro'
@@ -195,6 +232,73 @@ function FakeComponent(_ref) {
   return (0, _react.useMemo)(function () {
     return fn();
   }, [fn]);
+}
+"
+`;
+
+exports[`Hooks macro › Is not confused by self-recursive function (directly called): Is not confused by self-recursive function (directly called) 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue }) {
+  return useAutoMemo(fibonacci(propValue));
+  function fibonacci(n) {
+    return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var propValue = _ref.propValue;
+  return (0, _react.useMemo)(function () {
+    return fibonacci(propValue);
+  }, [propValue]);
+
+  function fibonacci(n) {
+    return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+  }
+}
+"
+`;
+
+exports[`Hooks macro › Is not confused by self-recursive function (indirectly called): Is not confused by self-recursive function (indirectly called) 1`] = `
+"
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue }) {
+  return useAutoMemo(calculate());
+  function calculate() {
+    return fibonacci(propValue);
+  }
+  function fibonacci(n) {
+    return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+\\"use strict\\";
+
+var _react = require(\\"react\\");
+
+function FakeComponent(_ref) {
+  var propValue = _ref.propValue;
+  return (0, _react.useMemo)(function () {
+    return calculate();
+  }, [propValue]);
+
+  function calculate() {
+    return fibonacci(propValue);
+  }
+
+  function fibonacci(n) {
+    return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+  }
 }
 "
 `;

@@ -565,6 +565,51 @@ pluginTester({
         }
       `,
     },
+    {
+      title: 'Is not confused by self-recursive function (directly called)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ propValue }) {
+          return useAutoMemo(fibonacci(propValue));
+          function fibonacci(n) {
+            return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+          }
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by self-recursive function (indirectly called)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ propValue }) {
+          return useAutoMemo(calculate());
+          function calculate() {
+            return fibonacci(propValue);
+          }
+          function fibonacci(n) {
+            return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+          }
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by indirect recursive functions',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        function FakeComponent({ propValue }) {
+          return useAutoMemo(first());
+          function first() {
+            return propValue > 0 ? second() : propValue + 1;
+          }
+          function second() {
+            return propValue < 0 ? first() : propValue + 2;
+          }
+        }
+      `,
+    },
   ]),
 });
 
