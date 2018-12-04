@@ -1,3 +1,7 @@
+## v0.1.7 (December 4, 2018)
+
+- Avoid maximum-callstack-by-recursion with circular/recursive references (fbcd59f180d80bea05abaf7108b7bf6f6346dc9a, cf03ded192c3ea89bd2cad11019017e54816ecff)
+
 ## v0.1.6 (November 30, 2018)
 
 - Even more precise and/or pedantic tests, reached 100% code coverage (286696463eede515b01915fdee726adfd011a6f3, 3c5ca59db0e80f928d78f2a48b5b0399c14a037a, dd5eee7c2476e778c09683fd8ebcc692a3cbca2c, af8279f1872c56fde5c64d67b8211186030f07ed, c0632577c51224cf0c9eec63854fbc12ab53b9aa)
