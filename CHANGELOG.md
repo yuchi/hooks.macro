@@ -1,3 +1,8 @@
+## v0.2.0 (December 17, 2018)
+
+- Remove `useMutationEffect` since it is not part of React anymore (a2a5aaab7ae33907b53d6b4a11ceb53b5a4c6ad4)
+- Add complete typings for both TypeScript and Flow (d725da57b40ef74fe4776f24027caf2236025beb)
+
 ## v0.1.7 (December 4, 2018)
 
 - Avoid maximum-callstack-by-recursion with circular/recursive references (fbcd59f180d80bea05abaf7108b7bf6f6346dc9a, cf03ded192c3ea89bd2cad11019017e54816ecff)
