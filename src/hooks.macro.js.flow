@@ -1,0 +1,15 @@
+// @flow
+
+type MaybeCleanUpFn = ?() => mixed;
+
+declare export function useAutoMemo<T>(create: T | (() => T)): T;
+
+declare export function useAutoCallback<
+  T: (...args: $ReadOnlyArray<empty>) => mixed,
+>(
+  callback: T,
+): T;
+
+declare export function useAutoEffect(create: () => MaybeCleanUpFn): void;
+
+declare export function useAutoLayoutEffect(create: () => MaybeCleanUpFn): void;

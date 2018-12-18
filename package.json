@@ -5,11 +5,14 @@
   "main": "build/hooks.macro.js",
   "license": "MIT",
   "repository": "https://github.com/yuchi/hooks.macro.git",
-  "typings": "./index.d.ts",
+  "typings": "build/hooks.macro.d.ts",
   "scripts": {
     "test": "jest",
     "test:update": "jest --updateSnapshot",
-    "build": "babel src/hooks.macro.js -d build",
+    "build": "yarn build:babel && yarn build:flow && yarn build:typescript",
+    "build:babel": "babel src/hooks.macro.js -d build",
+    "build:flow": "cp src/**.js.flow build",
+    "build:typescript": "cp src/**.d.ts build",
     "format": "prettier --write \"**/*.ts\" \"**/*.json\" \"**/*.js\" \"**/*.md\""
   },
   "dependencies": {
