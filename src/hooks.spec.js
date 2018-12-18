@@ -12,7 +12,6 @@ pluginTester({
       'useAutoCallback',
       'useAutoEffect',
       'useAutoLayoutEffect',
-      'useAutoLayoutEffect',
     ].map(macroName => ({
       title: `Throws if not called as function (${macroName})`,
       error: true,
@@ -22,38 +21,32 @@ pluginTester({
         console.log(${macroName});
       `,
     })),
-    ...[
-      'useAutoCallback',
-      'useAutoEffect',
-      'useAutoLayoutEffect',
-      'useAutoLayoutEffect',
-    ].map(macroName => ({
-      title: `Throws if not called with a function (${macroName})`,
-      error: true,
-      snapshot: false,
-      code: `
+    ...['useAutoCallback', 'useAutoEffect', 'useAutoLayoutEffect'].map(
+      macroName => ({
+        title: `Throws if not called with a function (${macroName})`,
+        error: true,
+        snapshot: false,
+        code: `
         import { ${macroName} } from './hooks.macro'
         function FakeComponent() {
           ${macroName}(12);
         }
       `,
-    })),
-    ...[
-      'useAutoCallback',
-      'useAutoEffect',
-      'useAutoLayoutEffect',
-      'useAutoLayoutEffect',
-    ].map(macroName => ({
-      title: `Throws if not called without arguments (${macroName})`,
-      error: true,
-      snapshot: false,
-      code: `
+      }),
+    ),
+    ...['useAutoCallback', 'useAutoEffect', 'useAutoLayoutEffect'].map(
+      macroName => ({
+        title: `Throws if not called without arguments (${macroName})`,
+        error: true,
+        snapshot: false,
+        code: `
         import { ${macroName} } from './hooks.macro'
         function FakeComponent() {
           ${macroName}();
         }
       `,
-    })),
+      }),
+    ),
     {
       title: 'Works with null',
       code: `

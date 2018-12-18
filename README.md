@@ -22,7 +22,7 @@
 - [Full reference](#full-reference)
   - [`useAutoMemo`](#useautomemo)
   - [`useAutoCallback`](#useautocallback)
-  - [`useAutoEffect`, `useAutoMutationEffect`, `useAutoLayoutEffect`](#useautoeffect-useautomutationeffect-useautolayouteffect)
+  - [`useAutoEffect`, `useAutoLayoutEffect`](#useautoeffect-useautolayouteffect)
 - [Limitations](#limitations)
 - [Inspiration](#inspiration)
 - [License](#license)
@@ -156,16 +156,12 @@ useCallback(
 );
 ```
 
-### `useAutoEffect`, `useAutoMutationEffect`, `useAutoLayoutEffect`
+### `useAutoEffect`, `useAutoLayoutEffect`
 
 They work exactly like their standard React counterpart, but they automatically identify value dependencies.
 
 ```js
-import {
-  useAutoEffect,
-  useAutoMutationEffect,
-  useAutoLayoutEffect,
-} from 'hooks.macro';
+import { useAutoEffect, useAutoLayoutEffect } from 'hooks.macro';
 ```
 
 ```js

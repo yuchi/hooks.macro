@@ -174,7 +174,6 @@ const CONFIGS = [
   ['useAutoMemo', 'useMemo', true],
   ['useAutoCallback', 'useCallback', false],
   ['useAutoEffect', 'useEffect', false],
-  ['useAutoMutationEffect', 'useMutationEffect', false],
   ['useAutoLayoutEffect', 'useLayoutEffect', false],
 ];
 
