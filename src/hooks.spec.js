@@ -36,7 +36,7 @@ pluginTester({
     ),
     ...['useAutoCallback', 'useAutoEffect', 'useAutoLayoutEffect'].map(
       macroName => ({
-        title: `Throws if not called without arguments (${macroName})`,
+        title: `Throws if called without arguments (${macroName})`,
         error: true,
         snapshot: false,
         code: `
