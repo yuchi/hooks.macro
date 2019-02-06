@@ -6,6 +6,9 @@
   "license": "MIT",
   "repository": "https://github.com/yuchi/hooks.macro.git",
   "typings": "build/hooks.macro.d.ts",
+  "files": [
+    "build/**"
+  ],
   "scripts": {
     "test": "jest",
     "test:update": "jest --updateSnapshot",
