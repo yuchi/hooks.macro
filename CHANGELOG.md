@@ -1,3 +1,12 @@
+## v1.0.1 (February 6, 2019)
+
+- Make sure all built files are included in the distribution (54201821869669a76c60360a8b7b74f88c5654d7)
+
+## v1.0.0 (February 6, 2019)
+
+- Remove alpha warnings. React Hooks are live!
+- Fix export names in TypeScript typings (2ccd5f6335b6ac79603ee990537a55ab47f67afa)
+
 ## v0.2.0 (December 17, 2018)
 
 - Remove `useMutationEffect` since it is not part of React anymore (a2a5aaab7ae33907b53d6b4a11ceb53b5a4c6ad4)
