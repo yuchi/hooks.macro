@@ -2,19 +2,6 @@
 
 > Babel Macros for React Hooks automatic memoization invalidation.
 
-> **Note:** This is using the new [React Hooks API Proposal](https://reactjs.org/docs/hooks-intro.html)
-> which is subject to change until React 16.7 final.
->
-> You'll need to install `react`, `react-dom`, etc at `^16.7.0-alpha.0`
->
-> ```
-> npm install react@next react-dom@next
-> ```
->
-> ```
-> yarn add react@next react-dom@next
-> ```
-
 - [Features](#features)
 - [Roadmap](#roadmap-)
 - [Installation](#installation)
