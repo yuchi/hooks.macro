@@ -1,9 +1,11 @@
 export function useAutoMemo<T>(factory: () => T): T;
 export function useAutoMemo<T>(factory: T): T;
 
-export function useCallback<T extends (...args: any[]) => any>(callback: T): T;
+export function useAutoCallback<T extends (...args: any[]) => any>(
+  callback: T,
+): T;
 
 type EffectCallback = () => void | (() => void);
 
-export function useEffect(effect: EffectCallback): void;
-export function useLayoutEffect(effect: EffectCallback): void;
+export function useAutoEffect(effect: EffectCallback): void;
+export function useAutoLayoutEffect(effect: EffectCallback): void;
