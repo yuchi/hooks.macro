@@ -1,5 +1,5 @@
 const path = require('path');
-const pluginTester = require('babel-plugin-tester');
+const pluginTester = require('babel-plugin-tester').default;
 const plugin = require('babel-plugin-macros');
 
 pluginTester({
