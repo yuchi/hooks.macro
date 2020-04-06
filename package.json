@@ -1,6 +1,6 @@
 {
   "name": "hooks.macro",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Pier Paolo Ramon <ramonpierre@gmail.com>",
   "main": "build/hooks.macro.js",
   "license": "MIT",
