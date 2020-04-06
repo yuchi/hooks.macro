@@ -2,6 +2,65 @@ const path = require('path');
 const pluginTester = require('babel-plugin-tester').default;
 const plugin = require('babel-plugin-macros');
 
+const REACT_IMPORTS = [
+  // Working imports
+  {
+    name: 'default import',
+    import: `import React from 'react';`,
+    prefix: 'React.',
+    supported: true,
+  },
+  {
+    name: 'namespace import',
+    import: `import * as React from 'react';`,
+    prefix: 'React.',
+    supported: true,
+  },
+  {
+    name: 'named import',
+    import: `import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';`,
+    prefix: '',
+    supported: true,
+  },
+  {
+    name: 'renamed default import',
+    import: `import Baz from 'react';`,
+    prefix: `Baz.`,
+    supported: true,
+  },
+  {
+    name: 'renamed namespace import',
+    import: `import * as Baz from 'react';`,
+    prefix: `Baz.`,
+    supported: true,
+  },
+  {
+    name: 'global variable access',
+    import: ``,
+    prefix: `React.`,
+    supported: true,
+  },
+  // Skipped imports
+  {
+    name: 'wrong default/namespace import',
+    import: `import { Foo } from 'react';`,
+    prefix: 'Foo.',
+    supported: false,
+  },
+  {
+    name: 'extraneous default import',
+    import: `import Foo from 'foo';`,
+    prefix: 'Foo.',
+    supported: false,
+  },
+  {
+    name: 'extraneous global access',
+    import: ``,
+    prefix: 'Foo.',
+    supported: false,
+  },
+];
+
 pluginTester({
   plugin,
   pluginName: 'Hooks macro ›',
@@ -603,6 +662,70 @@ pluginTester({
         }
       `,
     },
+    ...REACT_IMPORTS.map(imp => ({
+      title: `${
+        imp.supported ? 'Skips' : 'Keeps'
+      } known static hooks’ values (${imp.name})`,
+      code: `
+        ${imp.import}
+        import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+        function FakeComponent() {
+          const ref = ${imp.prefix}useRef(false);
+          const [c, setC] = ${imp.prefix}useState(0);
+          const [s, dispatch] = ${imp.prefix}useReducer((s, a) => s + a, 0);
+
+          useAutoEffect(() => {
+            setC(c => c + 1);
+            dispatch(41);
+          });
+
+          const handleSomething = useAutoCallback(() => {
+            setC(s + 123);
+            dispatch(c + 123);
+            ref.current = true;
+          });
+
+          return useAutoMemo(c + s);
+        }
+      `,
+    })),
+    ...REACT_IMPORTS.map(imp => ({
+      title: `Is not confused by re-assigned known static hooks’ values (${imp.name})`,
+      code: `
+        ${imp.import}
+        import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+        function FakeComponent() {
+          let [c, setC] = ${imp.prefix}useState(0);
+
+          if (c > 4) {
+            setC = console.log;
+          }
+
+          useAutoEffect(() => {
+            setC(123);
+          });
+        }
+      `,
+    })),
+    ...REACT_IMPORTS.map(imp => ({
+      title: `Keeps other unknown React hooks’ values (${imp.name})`,
+      code: `
+        ${imp.import}
+        import { useAutoEffect } from './hooks.macro';
+
+        const Context = ${imp.prefix}createContext(null);
+
+        function FakeComponent() {
+          const value = ${imp.prefix}useContext(Context);
+
+          useAutoEffect(() => {
+            console.log(value);
+          });
+        }
+      `,
+    })),
   ]),
 });
 

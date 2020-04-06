@@ -30,22 +30,144 @@ function getDirectFunctionInitPath(t, path) {
   return null;
 }
 
-function isImmutableLiteral(t, path) {
-  if (t.isVariableDeclarator(path)) {
-    const initPath = path.get('init');
+function isStaticKnownHookValue(t, path, binding) {
+  if (!binding.constant) {
+    return false;
+  }
 
-    if (
-      t.isBigIntLiteral(initPath) ||
-      t.isBooleanLiteral(initPath) ||
-      t.isNullLiteral(initPath) ||
-      t.isNumericLiteral(initPath) ||
-      t.isStringLiteral(initPath)
-    ) {
+  const bindingPath = binding.path;
+
+  if (t.isVariableDeclarator(bindingPath)) {
+    const idPath = bindingPath.get('id');
+    const initPath = bindingPath.get('init');
+
+    const apiName = getMatchingReactAPICallExpression(
+      t,
+      initPath,
+      'useRef',
+      'useState',
+      'useReducer',
+    );
+
+    if (apiName === 'useRef') {
       return true;
+    } else if (apiName === 'useState' || apiName === 'useReducer') {
+      if (t.isArrayPattern(idPath)) {
+        const secondElementPath = idPath.get('elements.1');
+
+        if (
+          t.isIdentifier(secondElementPath) &&
+          secondElementPath.node.name === path.node.name
+        ) {
+          return true;
+        }
+      }
     }
   }
 
   return false;
+}
+
+function getMatchingReactAPICallExpression(t, path, ...methodNames) {
+  if (t.isCallExpression(path)) {
+    const calleePath = path.get('callee');
+
+    return (
+      getMatchingReactMemberExpression(t, calleePath, ...methodNames) ||
+      getMatchingReactNamedImport(t, calleePath, ...methodNames)
+    );
+  }
+
+  return false;
+}
+
+function getMatchingReactMemberExpression(t, path, ...names) {
+  if (
+    t.isMemberExpression(path) &&
+    isReactNamespaceImport(t, path.get('object')) &&
+    t.isIdentifier(path.node.property) &&
+    names.includes(path.node.property.name)
+  ) {
+    return path.node.property.name;
+  }
+
+  return false;
+}
+
+function isReactNamespaceImport(t, path) {
+  if (t.isIdentifier(path)) {
+    if (path.node.name === 'React') {
+      return true;
+    }
+
+    const binding = path.scope.getBinding(path.node.name);
+
+    if (binding == null) {
+      return null;
+    }
+
+    const bindingPath = binding.path;
+
+    if (isReactImport(t, bindingPath)) {
+      if (
+        // import React from 'react'
+        t.isImportDefaultSpecifier(bindingPath) ||
+        // import * as React from 'react'
+        t.isImportNamespaceSpecifier(bindingPath)
+      ) {
+        return true;
+      }
+    }
+
+    // TODO require('react')
+  }
+
+  return false;
+}
+
+function getMatchingReactNamedImport(t, path, ...names) {
+  if (t.isIdentifier(path)) {
+    const binding = path.scope.getBinding(path.node.name);
+
+    if (binding == null) {
+      return null;
+    }
+
+    const bindingPath = binding.path;
+
+    if (isReactImport(t, bindingPath)) {
+      if (
+        t.isImportSpecifier(bindingPath) &&
+        names.includes(bindingPath.node.imported.name)
+      ) {
+        return bindingPath.node.imported.name;
+      }
+    }
+  }
+
+  return false;
+}
+
+function isReactImport(t, path) {
+  return (
+    t.isImportDeclaration(path.parent) && path.parent.source.value === 'react'
+  );
+}
+
+function isImmutableLiteral(t, path) {
+  if (t.isVariableDeclarator(path)) {
+    const initPath = path.get('init');
+
+    return isImmutableLiteral(initPath);
+  } else {
+    return (
+      t.isBigIntLiteral(path) ||
+      t.isBooleanLiteral(path) ||
+      t.isNullLiteral(path) ||
+      t.isNumericLiteral(path) ||
+      t.isStringLiteral(path)
+    );
+  }
 }
 
 function guardFromRecursion(visitedEntryNodes, node) {
@@ -102,6 +224,11 @@ function visitInputsReferences(
             visitedEntryNodes,
             visitor,
           );
+          return;
+        }
+
+        // Skip known static hook values (state setters, refs, dispatchers)
+        if (isStaticKnownHookValue(t, path, binding)) {
           return;
         }
 

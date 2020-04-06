@@ -158,6 +158,344 @@ function FakeComponent() {
 
 `;
 
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (default import): Is not confused by re-assigned known static hooks’ values (default import) 1`] = `
+
+import React from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = React.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import React from 'react';
+
+function FakeComponent() {
+  let [c, setC] = React.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (extraneous default import): Is not confused by re-assigned known static hooks’ values (extraneous default import) 1`] = `
+
+import Foo from 'foo';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = Foo.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import Foo from 'foo';
+
+function FakeComponent() {
+  let [c, setC] = Foo.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (extraneous global access): Is not confused by re-assigned known static hooks’ values (extraneous global access) 1`] = `
+
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = Foo.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+
+function FakeComponent() {
+  let [c, setC] = Foo.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (global variable access): Is not confused by re-assigned known static hooks’ values (global variable access) 1`] = `
+
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = React.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+
+function FakeComponent() {
+  let [c, setC] = React.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (named import): Is not confused by re-assigned known static hooks’ values (named import) 1`] = `
+
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+
+function FakeComponent() {
+  let [c, setC] = useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (namespace import): Is not confused by re-assigned known static hooks’ values (namespace import) 1`] = `
+
+import * as React from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = React.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import * as React from 'react';
+
+function FakeComponent() {
+  let [c, setC] = React.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (renamed default import): Is not confused by re-assigned known static hooks’ values (renamed default import) 1`] = `
+
+import Baz from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = Baz.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import Baz from 'react';
+
+function FakeComponent() {
+  let [c, setC] = Baz.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (renamed namespace import): Is not confused by re-assigned known static hooks’ values (renamed namespace import) 1`] = `
+
+import * as Baz from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = Baz.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import * as Baz from 'react';
+
+function FakeComponent() {
+  let [c, setC] = Baz.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by re-assigned known static hooks’ values (wrong default/namespace import): Is not confused by re-assigned known static hooks’ values (wrong default/namespace import) 1`] = `
+
+import { Foo } from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  let [c, setC] = Foo.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  useAutoEffect(() => {
+    setC(123);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { Foo } from 'react';
+
+function FakeComponent() {
+  let [c, setC] = Foo.useState(0);
+
+  if (c > 4) {
+    setC = console.log;
+  }
+
+  _useEffect(() => {
+    setC(123);
+  }, [setC]);
+}
+
+
+`;
+
 exports[`Hooks macro › Is not confused by re-assignments over literal: Is not confused by re-assignments over literal 1`] = `
 
 import { useAutoMemo } from './hooks.macro'
@@ -261,6 +599,456 @@ function FakeComponent({ propValue }) {
   function fibonacci(n) {
     return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
   }
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps known static hooks’ values (extraneous default import): Keeps known static hooks’ values (extraneous default import) 1`] = `
+
+import Foo from 'foo';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = Foo.useRef(false);
+  const [c, setC] = Foo.useState(0);
+  const [s, dispatch] = Foo.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import Foo from 'foo';
+
+function FakeComponent() {
+  const ref = Foo.useRef(false);
+  const [c, setC] = Foo.useState(0);
+  const [s, dispatch] = Foo.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, [setC, dispatch]);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [setC, s, dispatch, c, ref]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps known static hooks’ values (extraneous global access): Keeps known static hooks’ values (extraneous global access) 1`] = `
+
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = Foo.useRef(false);
+  const [c, setC] = Foo.useState(0);
+  const [s, dispatch] = Foo.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+
+function FakeComponent() {
+  const ref = Foo.useRef(false);
+  const [c, setC] = Foo.useState(0);
+  const [s, dispatch] = Foo.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, [setC, dispatch]);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [setC, s, dispatch, c, ref]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps known static hooks’ values (wrong default/namespace import): Keeps known static hooks’ values (wrong default/namespace import) 1`] = `
+
+import { Foo } from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = Foo.useRef(false);
+  const [c, setC] = Foo.useState(0);
+  const [s, dispatch] = Foo.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import { Foo } from 'react';
+
+function FakeComponent() {
+  const ref = Foo.useRef(false);
+  const [c, setC] = Foo.useState(0);
+  const [s, dispatch] = Foo.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, [setC, dispatch]);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [setC, s, dispatch, c, ref]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (default import): Keeps other unknown React hooks’ values (default import) 1`] = `
+
+import React from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = React.createContext(null);
+
+function FakeComponent() {
+  const value = React.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import React from 'react';
+const Context = React.createContext(null);
+
+function FakeComponent() {
+  const value = React.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (extraneous default import): Keeps other unknown React hooks’ values (extraneous default import) 1`] = `
+
+import Foo from 'foo';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = Foo.createContext(null);
+
+function FakeComponent() {
+  const value = Foo.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import Foo from 'foo';
+const Context = Foo.createContext(null);
+
+function FakeComponent() {
+  const value = Foo.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (extraneous global access): Keeps other unknown React hooks’ values (extraneous global access) 1`] = `
+
+import { useAutoEffect } from './hooks.macro';
+
+const Context = Foo.createContext(null);
+
+function FakeComponent() {
+  const value = Foo.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+const Context = Foo.createContext(null);
+
+function FakeComponent() {
+  const value = Foo.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (global variable access): Keeps other unknown React hooks’ values (global variable access) 1`] = `
+
+import { useAutoEffect } from './hooks.macro';
+
+const Context = React.createContext(null);
+
+function FakeComponent() {
+  const value = React.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+const Context = React.createContext(null);
+
+function FakeComponent() {
+  const value = React.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (named import): Keeps other unknown React hooks’ values (named import) 1`] = `
+
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = createContext(null);
+
+function FakeComponent() {
+  const value = useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+const Context = createContext(null);
+
+function FakeComponent() {
+  const value = useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (namespace import): Keeps other unknown React hooks’ values (namespace import) 1`] = `
+
+import * as React from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = React.createContext(null);
+
+function FakeComponent() {
+  const value = React.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import * as React from 'react';
+const Context = React.createContext(null);
+
+function FakeComponent() {
+  const value = React.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (renamed default import): Keeps other unknown React hooks’ values (renamed default import) 1`] = `
+
+import Baz from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = Baz.createContext(null);
+
+function FakeComponent() {
+  const value = Baz.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import Baz from 'react';
+const Context = Baz.createContext(null);
+
+function FakeComponent() {
+  const value = Baz.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (renamed namespace import): Keeps other unknown React hooks’ values (renamed namespace import) 1`] = `
+
+import * as Baz from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = Baz.createContext(null);
+
+function FakeComponent() {
+  const value = Baz.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import * as Baz from 'react';
+const Context = Baz.createContext(null);
+
+function FakeComponent() {
+  const value = Baz.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Keeps other unknown React hooks’ values (wrong default/namespace import): Keeps other unknown React hooks’ values (wrong default/namespace import) 1`] = `
+
+import { Foo } from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+const Context = Foo.createContext(null);
+
+function FakeComponent() {
+  const value = Foo.useContext(Context);
+
+  useAutoEffect(() => {
+    console.log(value);
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { Foo } from 'react';
+const Context = Foo.createContext(null);
+
+function FakeComponent() {
+  const value = Foo.useContext(Context);
+
+  _useEffect(() => {
+    console.log(value);
+  }, [value]);
 }
 
 
@@ -411,6 +1199,331 @@ function FakeComponent() {
     const [v] = value;
     return v;
   }, [value]);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips known static hooks’ values (default import): Skips known static hooks’ values (default import) 1`] = `
+
+import React from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = React.useRef(false);
+  const [c, setC] = React.useState(0);
+  const [s, dispatch] = React.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import React from 'react';
+
+function FakeComponent() {
+  const ref = React.useRef(false);
+  const [c, setC] = React.useState(0);
+  const [s, dispatch] = React.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, []);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [s, c]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips known static hooks’ values (global variable access): Skips known static hooks’ values (global variable access) 1`] = `
+
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = React.useRef(false);
+  const [c, setC] = React.useState(0);
+  const [s, dispatch] = React.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+
+function FakeComponent() {
+  const ref = React.useRef(false);
+  const [c, setC] = React.useState(0);
+  const [s, dispatch] = React.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, []);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [s, c]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips known static hooks’ values (named import): Skips known static hooks’ values (named import) 1`] = `
+
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = useRef(false);
+  const [c, setC] = useState(0);
+  const [s, dispatch] = useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+
+function FakeComponent() {
+  const ref = useRef(false);
+  const [c, setC] = useState(0);
+  const [s, dispatch] = useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, []);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [s, c]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips known static hooks’ values (namespace import): Skips known static hooks’ values (namespace import) 1`] = `
+
+import * as React from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = React.useRef(false);
+  const [c, setC] = React.useState(0);
+  const [s, dispatch] = React.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import * as React from 'react';
+
+function FakeComponent() {
+  const ref = React.useRef(false);
+  const [c, setC] = React.useState(0);
+  const [s, dispatch] = React.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, []);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [s, c]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips known static hooks’ values (renamed default import): Skips known static hooks’ values (renamed default import) 1`] = `
+
+import Baz from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = Baz.useRef(false);
+  const [c, setC] = Baz.useState(0);
+  const [s, dispatch] = Baz.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import Baz from 'react';
+
+function FakeComponent() {
+  const ref = Baz.useRef(false);
+  const [c, setC] = Baz.useState(0);
+  const [s, dispatch] = Baz.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, []);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [s, c]);
+
+  return _useMemo(() => c + s, [c, s]);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips known static hooks’ values (renamed namespace import): Skips known static hooks’ values (renamed namespace import) 1`] = `
+
+import * as Baz from 'react';
+import { useAutoCallback, useAutoEffect, useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  const ref = Baz.useRef(false);
+  const [c, setC] = Baz.useState(0);
+  const [s, dispatch] = Baz.useReducer((s, a) => s + a, 0);
+
+  useAutoEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  });
+
+  const handleSomething = useAutoCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  });
+
+  return useAutoMemo(c + s);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import { useCallback as _useCallback } from 'react';
+import { useMemo as _useMemo } from 'react';
+import * as Baz from 'react';
+
+function FakeComponent() {
+  const ref = Baz.useRef(false);
+  const [c, setC] = Baz.useState(0);
+  const [s, dispatch] = Baz.useReducer((s, a) => s + a, 0);
+
+  _useEffect(() => {
+    setC(c => c + 1);
+    dispatch(41);
+  }, []);
+
+  const handleSomething = _useCallback(() => {
+    setC(s + 123);
+    dispatch(c + 123);
+    ref.current = true;
+  }, [s, c]);
+
+  return _useMemo(() => c + s, [c, s]);
 }
 
 
