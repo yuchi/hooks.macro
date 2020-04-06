@@ -135,12 +135,9 @@ useAutoCallback(() => {
 Becomes:
 
 ```js
-useCallback(
-  () => {
-    doSomethingWith(value);
-  },
-  [doSomethingWith, value],
-);
+useCallback(() => {
+  doSomethingWith(value);
+}, [doSomethingWith, value]);
 ```
 
 ### `useAutoEffect`, `useAutoLayoutEffect`
@@ -160,12 +157,9 @@ useAutoEffect(() => {
 Becomes:
 
 ```js
-useEffect(
-  () => {
-    doSomethingWith(value);
-  },
-  [doSomethingWith, value],
-);
+useEffect(() => {
+  doSomethingWith(value);
+}, [doSomethingWith, value]);
 ```
 
 ## Limitations
