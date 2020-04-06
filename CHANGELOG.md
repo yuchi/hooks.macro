@@ -1,3 +1,8 @@
+## v1.1.1 (April 6, 2020)
+
+- Ignore static state values. Closes #11 (3e093fd23569ef99791baae2505f8d548a64d807)
+- Actually build the project before publishing it...
+
 ## v1.1.0 (April 6, 2020)
 
 - Ignore constant state setters, reducers’ dispatch functions, refs. Closes #10 (f0082d33a3bf2879df0270532d5415a719bad703)
