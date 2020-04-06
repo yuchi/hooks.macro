@@ -1,3 +1,7 @@
+## v1.1.0 (April 6, 2020)
+
+- Ignore constant state setters, reducers’ dispatch functions, refs. Closes #10 (f0082d33a3bf2879df0270532d5415a719bad703)
+
 ## v1.0.1 (February 6, 2019)
 
 - Make sure all built files are included in the distribution (54201821869669a76c60360a8b7b74f88c5654d7)
