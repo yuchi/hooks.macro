@@ -1580,6 +1580,62 @@ function FakeComponent() {
 
 `;
 
+exports[`Hooks macro › Skips state values with missing setters: Skips state values with missing setters 1`] = `
+
+import React from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+function FakeComponent() {
+  const [id] = React.useState(Math.random);
+  useAutoEffect(() => {
+    console.log(id)
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import React from 'react';
+
+function FakeComponent() {
+  const [id] = React.useState(Math.random);
+
+  _useEffect(() => {
+    console.log(id);
+  }, []);
+}
+
+
+`;
+
+exports[`Hooks macro › Skips state values with unused setters: Skips state values with unused setters 1`] = `
+
+import React from 'react';
+import { useAutoEffect } from './hooks.macro';
+
+function FakeComponent() {
+  const [id, setId] = React.useState(Math.random);
+  useAutoEffect(() => {
+    console.log(id)
+  });
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useEffect as _useEffect } from 'react';
+import React from 'react';
+
+function FakeComponent() {
+  const [id, setId] = React.useState(Math.random);
+
+  _useEffect(() => {
+    console.log(id);
+  }, []);
+}
+
+
+`;
+
 exports[`Hooks macro › Works with doubly indirect dependencies on props: Works with doubly indirect dependencies on props 1`] = `
 
 import { useAutoMemo } from './hooks.macro'

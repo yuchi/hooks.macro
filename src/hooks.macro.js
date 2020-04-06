@@ -31,10 +31,6 @@ function getDirectFunctionInitPath(t, path) {
 }
 
 function isStaticKnownHookValue(t, path, binding) {
-  if (!binding.constant) {
-    return false;
-  }
-
   const bindingPath = binding.path;
 
   if (t.isVariableDeclarator(bindingPath)) {
@@ -50,15 +46,25 @@ function isStaticKnownHookValue(t, path, binding) {
     );
 
     if (apiName === 'useRef') {
+      // Refs are known to be static
       return true;
     } else if (apiName === 'useState' || apiName === 'useReducer') {
       if (t.isArrayPattern(idPath)) {
-        const secondElementPath = idPath.get('elements.1');
+        const [statePath, dispatchFnPath] = idPath.get('elements');
 
         if (
-          t.isIdentifier(secondElementPath) &&
-          secondElementPath.node.name === path.node.name
+          t.isIdentifier(dispatchFnPath) &&
+          dispatchFnPath.node.name === path.node.name
         ) {
+          // State setters and dispatch functions are known to be static
+          return true;
+        } else if (
+          t.isIdentifier(statePath) &&
+          statePath.node.name &&
+          (dispatchFnPath == null || isUnusedReference(t, dispatchFnPath))
+        ) {
+          // State values with a missing or unused setters/dispatch fns
+          // cannot change, therefore are static
           return true;
         }
       }
@@ -168,6 +174,12 @@ function isImmutableLiteral(t, path) {
       t.isStringLiteral(path)
     );
   }
+}
+
+function isUnusedReference(t, path) {
+  const binding = path.scope.getBinding(path.node.name);
+
+  return !binding.referenced;
 }
 
 function guardFromRecursion(visitedEntryNodes, node) {

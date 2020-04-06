@@ -726,6 +726,34 @@ pluginTester({
         }
       `,
     })),
+    {
+      title: 'Skips state values with missing setters',
+      code: `
+        import React from 'react';
+        import { useAutoEffect } from './hooks.macro';
+
+        function FakeComponent() {
+          const [id] = React.useState(Math.random);
+          useAutoEffect(() => {
+            console.log(id)
+          });
+        }
+      `,
+    },
+    {
+      title: 'Skips state values with unused setters',
+      code: `
+        import React from 'react';
+        import { useAutoEffect } from './hooks.macro';
+
+        function FakeComponent() {
+          const [id, setId] = React.useState(Math.random);
+          useAutoEffect(() => {
+            console.log(id)
+          });
+        }
+      `,
+    },
   ]),
 });
 
