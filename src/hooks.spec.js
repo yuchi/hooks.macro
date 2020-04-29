@@ -107,6 +107,38 @@ pluginTester({
       }),
     ),
     {
+      title: 'auto() with multiple references',
+      error: false,
+      snapshot: false,
+      code: `
+      import { auto } from './hooks.macro'
+
+      function FakeComponent() {
+        const foo = Math.random()
+
+        useCustomHook(() => {
+          console.log(foo, foo)
+        }, auto())
+      }
+      `,
+    },
+    {
+      title: 'auto injects the dependencies',
+      error: false,
+      snapshot: false,
+      code: `
+      import { auto } from './hooks.macro'
+
+      function FakeComponent() {
+        const foo = Math.random()
+
+        useCustomHook(function () {
+          console.log(foo, foo)
+        }, auto())
+      }
+      `,
+    },
+    {
       title: 'Works with null',
       code: `
         import { useAutoMemo } from './hooks.macro'
