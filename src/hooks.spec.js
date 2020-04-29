@@ -107,38 +107,6 @@ pluginTester({
       }),
     ),
     {
-      title: 'auto() with multiple references',
-      error: false,
-      snapshot: false,
-      code: `
-      import { auto } from './hooks.macro'
-
-      function FakeComponent() {
-        const foo = Math.random()
-
-        useCustomHook(() => {
-          console.log(foo, foo)
-        }, auto())
-      }
-      `,
-    },
-    {
-      title: 'auto injects the dependencies',
-      error: false,
-      snapshot: false,
-      code: `
-      import { auto } from './hooks.macro'
-
-      function FakeComponent() {
-        const foo = Math.random()
-
-        useCustomHook(function () {
-          console.log(foo, foo)
-        }, auto())
-      }
-      `,
-    },
-    {
       title: 'Works with null',
       code: `
         import { useAutoMemo } from './hooks.macro'
@@ -784,6 +752,57 @@ pluginTester({
             console.log(id)
           });
         }
+      `,
+    },
+    {
+      title: 'auto() with multiple references and ArrowFunctionExpression',
+      error: false,
+      snapshot: false,
+      code: `
+      import { auto } from './hooks.macro'
+
+      function FakeComponent() {
+        const foo = 'foo'.toUpperCase()
+
+        useCustomHook(() => {
+          console.log(foo, foo)
+        }, auto())
+      }
+      `,
+      output: `
+      function FakeComponent() {
+        const foo = 'foo'.toUpperCase();
+        useCustomHook(() => {
+          console.log(foo, foo);
+        }, [foo]);
+      }
+      `,
+    },
+    {
+      title: 'auto() with FunctionExpression',
+      error: false,
+      snapshot: false,
+      code: `
+      import { auto } from './hooks.macro'
+
+      function FakeComponent() {
+        const foo = 'foo'.toUpperCase()
+
+        useCustomHook(function () {
+          console.log(foo)
+        }, auto())
+      }
+      `,
+      output: `
+      function FakeComponent() {
+        const foo = 'foo'.toUpperCase();
+        useCustomHook(
+          function () {
+            console.log(foo);
+          },
+          [foo],
+        );
+      }
       `,
     },
   ]),
