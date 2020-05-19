@@ -93,6 +93,65 @@ function FakeComponent({ number = 12 }) {
 
 `;
 
+exports[`Hooks macro › Is not confused by do expression scopes: Is not confused by do expression scopes 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue = 2 }) {
+  const outer = useSomething(3);
+  const result = do {
+    const inner = useSomething(7);
+    useAutoMemo(outer * inner * propValue);
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+function FakeComponent({ propValue = 2 }) {
+  const outer = useSomething(3);
+
+  const result = (function () {
+    const inner = useSomething(7);
+    return _useMemo(() => outer * inner * propValue, [outer, inner, propValue]);
+  })();
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by dynamic components: Is not confused by dynamic components 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+const Foo = () => null
+const Bar = () => null
+
+function FakeComponent({ bar }) {
+  const Selected = bar ? Bar : Foo
+
+  return useAutoMemo(<Selected />)
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+const Foo = () => null;
+
+const Bar = () => null;
+
+function FakeComponent({ bar }) {
+  const Selected = bar ? Bar : Foo;
+  return _useMemo(() => /*#__PURE__*/ React.createElement(Selected, null), [
+    Selected,
+  ]);
+}
+
+
+`;
+
 exports[`Hooks macro › Is not confused by indirect recursive functions: Is not confused by indirect recursive functions 1`] = `
 
 import { useAutoMemo } from './hooks.macro'

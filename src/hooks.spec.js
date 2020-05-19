@@ -531,9 +531,11 @@ pluginTester({
       `,
     },
     {
-      // Couldn’t configure @babel/plugin-proposal-do-expressions
       title: 'Is not confused by do expression scopes',
-      skip: true,
+      babelOptions: {
+        babelrc: true,
+        filename: path.join(__dirname, 'do-expressions.js'),
+      },
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -659,6 +661,25 @@ pluginTester({
           function second() {
             return propValue < 0 ? first() : propValue + 2;
           }
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by dynamic components',
+      babelOptions: {
+        babelrc: true,
+        filename: path.join(__dirname, 'dynamic-components.js'),
+      },
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        const Foo = () => null
+        const Bar = () => null
+
+        function FakeComponent({ bar }) {
+          const Selected = bar ? Bar : Foo
+
+          return useAutoMemo(<Selected />)
         }
       `,
     },

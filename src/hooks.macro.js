@@ -208,11 +208,19 @@ function visitInputsReferences(
 
   entryPath.traverse({
     Expression(path) {
-      if (!t.isIdentifier(path)) {
+      let openingElement;
+
+      if (t.isJSXElement(path)) {
+        openingElement = path.node.openingElement.name;
+      }
+
+      if (!t.isIdentifier(path) && !t.isJSXElement(path)) {
         return;
       }
 
-      const binding = path.scope.getBinding(path.node.name);
+      const binding = path.scope.getBinding(
+        openingElement ? openingElement.name : path.node.name,
+      );
 
       // Reference without a binding (such as globals) are excluded
       if (binding == null) {
@@ -251,7 +259,7 @@ function visitInputsReferences(
       }
 
       // All other bindings are included
-      visitor(path);
+      visitor(openingElement ? { node: openingElement } : path);
     },
   });
 }
@@ -269,6 +277,13 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
     visitedEntryNodes,
     ({ node }) => {
       if (!references.some(reference => reference.name === node.name)) {
+        if (node.type === 'JSXIdentifier') {
+          node = {
+            ...node,
+            type: 'Identifier',
+          };
+        }
+
         references.push(node);
       }
     },
