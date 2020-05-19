@@ -268,7 +268,7 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
   const { types: t } = babel;
 
   const visitedEntryNodes = [];
-  const references = [];
+  const references = {};
 
   visitInputsReferences(
     parentPath,
@@ -276,23 +276,16 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
     babel,
     visitedEntryNodes,
     ({ node }) => {
-      if (!references.some(reference => reference.name === node.name)) {
-        if (node.type === 'JSXIdentifier') {
-          node = {
-            ...node,
-            type: 'Identifier',
-          };
-        }
-
-        references.push(node);
-      }
+      references[node.name] = true;
     },
   );
 
   parentPath.replaceWith(
     t.callExpression(importedHookName, [
       createPath.node,
-      t.arrayExpression(references),
+      t.arrayExpression(
+        Object.keys(references).map(name => t.identifier(name)),
+      ),
     ]),
   );
 }
