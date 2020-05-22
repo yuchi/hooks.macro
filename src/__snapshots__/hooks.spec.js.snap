@@ -93,6 +93,66 @@ function FakeComponent({ number = 12 }) {
 
 `;
 
+exports[`Hooks macro › Is not confused by do expression scopes (with shadowing): Is not confused by do expression scopes (with shadowing) 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+const shadow = 12;
+function FakeComponent({ propValue = 2 }) {
+  const result = do {
+    const shadow = useSomething(7);
+    useAutoMemo(shadow * propValue);
+  }
+  useAutoMemo(shadow * propValue);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo2 } from 'react';
+import { useMemo as _useMemo } from 'react';
+const shadow = 12;
+
+function FakeComponent({ propValue = 2 }) {
+  const result = do {
+    const shadow = useSomething(7);
+
+    _useMemo(() => shadow * propValue, [shadow, propValue]);
+  };
+
+  _useMemo2(() => shadow * propValue, [propValue]);
+}
+
+
+`;
+
+exports[`Hooks macro › Is not confused by do expression scopes: Is not confused by do expression scopes 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+function FakeComponent({ propValue = 2 }) {
+  const outer = useSomething(3);
+  const result = do {
+    const inner = useSomething(7);
+    useAutoMemo(outer * inner * propValue);
+  }
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+function FakeComponent({ propValue = 2 }) {
+  const outer = useSomething(3);
+  const result = do {
+    const inner = useSomething(7);
+
+    _useMemo(() => outer * inner * propValue, [outer, inner, propValue]);
+  };
+}
+
+
+`;
+
 exports[`Hooks macro › Is not confused by indirect recursive functions: Is not confused by indirect recursive functions 1`] = `
 
 import { useAutoMemo } from './hooks.macro'

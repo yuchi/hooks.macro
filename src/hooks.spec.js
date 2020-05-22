@@ -66,7 +66,10 @@ pluginTester({
   pluginName: 'Hooks macro ›',
   snapshot: true,
   babelOptions: {
-    plugins: ['@babel/plugin-syntax-jsx'],
+    plugins: [
+      '@babel/plugin-syntax-jsx',
+      '@babel/plugin-syntax-do-expressions',
+    ],
     filename: __filename,
   },
   tests: [
@@ -578,9 +581,7 @@ pluginTester({
       `,
     },
     {
-      // Couldn’t configure @babel/plugin-proposal-do-expressions
       title: 'Is not confused by do expression scopes',
-      skip: true,
       code: `
         import { useAutoMemo } from './hooks.macro'
 
@@ -590,6 +591,21 @@ pluginTester({
             const inner = useSomething(7);
             useAutoMemo(outer * inner * propValue);
           }
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by do expression scopes (with shadowing)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        const shadow = 12;
+        function FakeComponent({ propValue = 2 }) {
+          const result = do {
+            const shadow = useSomething(7);
+            useAutoMemo(shadow * propValue);
+          }
+          useAutoMemo(shadow * propValue);
         }
       `,
     },
