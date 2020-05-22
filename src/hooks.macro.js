@@ -30,6 +30,24 @@ function getDirectFunctionInitPath(t, path) {
   return null;
 }
 
+function getExpressionIdentifierPath(t, expressionPath) {
+  if (t.isIdentifier(expressionPath)) {
+    return expressionPath;
+  } else if (t.isJSXElement(expressionPath)) {
+    let tagNamePath = expressionPath.get('openingElement.name');
+
+    while (t.isJSXMemberExpression(tagNamePath)) {
+      tagNamePath = tagNamePath.get('object');
+    }
+
+    if (t.isJSXIdentifier(tagNamePath)) {
+      return tagNamePath;
+    }
+  }
+
+  return null;
+}
+
 function isStaticKnownHookValue(t, path, binding) {
   const bindingPath = binding.path;
 
@@ -207,8 +225,10 @@ function visitInputsReferences(
   const parentScope = reachSignificantScope(t, parentPath.scope);
 
   entryPath.traverse({
-    Expression(path) {
-      if (!t.isIdentifier(path)) {
+    Expression(expressionPath) {
+      const path = getExpressionIdentifierPath(t, expressionPath);
+
+      if (path == null) {
         return;
       }
 
@@ -269,7 +289,7 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
     visitedEntryNodes,
     ({ node }) => {
       if (!references.some(reference => reference.name === node.name)) {
-        references.push(node);
+        references.push(t.isIdentifier(node) ? node : t.identifier(node.name));
       }
     },
   );
