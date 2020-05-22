@@ -817,5 +817,18 @@ pluginTester({
         }
       `,
     },
+    {
+      title: 'Doesn’t create duplicate imports',
+      code: `
+        import { useAutoMemo } from './hooks.macro';
+
+        function FakeComponent() {
+          useAutoMemo(12);          
+          useAutoMemo(12);          
+          useAutoMemo(12);          
+          useAutoMemo(12);          
+        }
+      `,
+    },
   ],
 });

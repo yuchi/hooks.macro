@@ -42,6 +42,34 @@ function FakeComponent({ value }) {
 
 `;
 
+exports[`Hooks macro › Doesn’t create duplicate imports: Doesn’t create duplicate imports 1`] = `
+
+import { useAutoMemo } from './hooks.macro';
+
+function FakeComponent() {
+  useAutoMemo(12);          
+  useAutoMemo(12);          
+  useAutoMemo(12);          
+  useAutoMemo(12);          
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+function FakeComponent() {
+  _useMemo(() => 12, []);
+
+  _useMemo(() => 12, []);
+
+  _useMemo(() => 12, []);
+
+  _useMemo(() => 12, []);
+}
+
+
+`;
+
 exports[`Hooks macro › Is not confused by block scopes: Is not confused by block scopes 1`] = `
 
 import { useAutoMemo } from './hooks.macro'
@@ -108,7 +136,6 @@ function FakeComponent({ propValue = 2 }) {
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { useMemo as _useMemo2 } from 'react';
 import { useMemo as _useMemo } from 'react';
 const shadow = 12;
 
@@ -119,7 +146,7 @@ function FakeComponent({ propValue = 2 }) {
     _useMemo(() => shadow * propValue, [shadow, propValue]);
   };
 
-  _useMemo2(() => shadow * propValue, [propValue]);
+  _useMemo(() => shadow * propValue, [propValue]);
 }
 
 

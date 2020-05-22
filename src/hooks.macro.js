@@ -302,10 +302,15 @@ function hookCreateTransform(parentPath, createPath, importedHookName, babel) {
   );
 }
 
-function hookTransform(path, state, macroName, hookName, autoClosure, babel) {
+function hookTransform(
+  path,
+  state,
+  macroName,
+  importedHookName,
+  autoClosure,
+  babel,
+) {
   const { types: t } = babel;
-
-  const importedHookName = addNamed(path, hookName, 'react');
 
   const functionCallPath = path.parentPath;
 
@@ -341,16 +346,22 @@ function memoMacro({ references, state, babel }) {
 
   CONFIGS.forEach(({ 0: macroName, 1: hookName, 2: autoClosure }) => {
     if (references[macroName]) {
+      let importedHookName;
+
       references[macroName].forEach(referencePath => {
         if (
           t.isCallExpression(referencePath.parentPath) &&
           referencePath.parentPath.node.callee === referencePath.node
         ) {
+          if (importedHookName == null) {
+            importedHookName = addNamed(referencePath, hookName, 'react');
+          }
+
           hookTransform(
             referencePath,
             state,
             macroName,
-            hookName,
+            importedHookName,
             autoClosure,
             babel,
           );
