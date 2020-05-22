@@ -65,7 +65,11 @@ pluginTester({
   plugin,
   pluginName: 'Hooks macro ›',
   snapshot: true,
-  tests: withFilename([
+  babelOptions: {
+    plugins: ['@babel/plugin-syntax-jsx'],
+    filename: __filename,
+  },
+  tests: [
     ...[
       'useAutoMemo',
       'useAutoCallback',
@@ -476,6 +480,49 @@ pluginTester({
       `,
     },
     {
+      title: 'Works with variables used as JSX tags',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        const Comp1 = () => null;
+        const Comp2 = () => null;
+
+        function FakeComponent({ prop }) {
+          const Component = prop ? Comp1 : Comp2;
+          return useAutoMemo(<Component />);
+        }
+      `,
+    },
+    {
+      title: 'Works with variables used as JSX tags (member access)',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        const Comp1 = () => null;
+        const Comp2 = () => null;
+
+        function FakeComponent({ prop }) {
+          const Config = { component: prop ? Comp1 : Comp2 };
+          return useAutoMemo(<Config.component />);
+        }
+      `,
+    },
+    {
+      title: 'Is not confused by native JSX tags',
+      code: `
+        import { useAutoMemo } from './hooks.macro'
+
+        const Comp1 = () => null;
+        const Comp2 = () => null;
+
+        function FakeComponent({ prop }) {
+          const div = 'hallo';
+          const Component = prop ? Comp1 : Comp2;
+          return useAutoMemo(<div><Component /></div>);
+        }
+      `,
+    },
+    {
       // This test should error, since there’s an access-before-define
       title: 'Is not confused by later bindings',
       skip: true,
@@ -754,22 +801,5 @@ pluginTester({
         }
       `,
     },
-  ]),
+  ],
 });
-
-function withFilename(tests) {
-  const cases = Array.isArray(tests)
-    ? tests
-    : Object.entries(tests).map(([name, code]) => ({ name, code }));
-
-  return cases.map(t => {
-    const test = { babelOptions: { filename: __filename } };
-    if (typeof t === 'string') {
-      test.code = t;
-    } else {
-      Object.assign(test, t);
-    }
-
-    return test;
-  });
-}

@@ -126,6 +126,43 @@ function FakeComponent({ propValue }) {
 
 `;
 
+exports[`Hooks macro › Is not confused by native JSX tags: Is not confused by native JSX tags 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+const Comp1 = () => null;
+const Comp2 = () => null;
+
+function FakeComponent({ prop }) {
+  const div = 'hallo';
+  const Component = prop ? Comp1 : Comp2;
+  return useAutoMemo(<div><Component /></div>);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+const Comp1 = () => null;
+
+const Comp2 = () => null;
+
+function FakeComponent({ prop }) {
+  const div = 'hallo';
+  const Component = prop ? Comp1 : Comp2;
+  return _useMemo(
+    () => (
+      <div>
+        <Component />
+      </div>
+    ),
+    [Component],
+  );
+}
+
+
+`;
+
 exports[`Hooks macro › Is not confused by omonims in other block scopes: Is not confused by omonims in other block scopes 1`] = `
 
 import { useAutoMemo } from './hooks.macro'
@@ -2241,6 +2278,64 @@ import { useMemo as _useMemo } from 'react';
 
 function FakeComponent({ propValue }) {
   const result = _useMemo(() => propValue, [propValue]);
+}
+
+
+`;
+
+exports[`Hooks macro › Works with variables used as JSX tags (member access): Works with variables used as JSX tags (member access) 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+const Comp1 = () => null;
+const Comp2 = () => null;
+
+function FakeComponent({ prop }) {
+  const Config = { component: prop ? Comp1 : Comp2 };
+  return useAutoMemo(<Config.component />);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+const Comp1 = () => null;
+
+const Comp2 = () => null;
+
+function FakeComponent({ prop }) {
+  const Config = {
+    component: prop ? Comp1 : Comp2,
+  };
+  return _useMemo(() => <Config.component />, [Config]);
+}
+
+
+`;
+
+exports[`Hooks macro › Works with variables used as JSX tags: Works with variables used as JSX tags 1`] = `
+
+import { useAutoMemo } from './hooks.macro'
+
+const Comp1 = () => null;
+const Comp2 = () => null;
+
+function FakeComponent({ prop }) {
+  const Component = prop ? Comp1 : Comp2;
+  return useAutoMemo(<Component />);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useMemo as _useMemo } from 'react';
+
+const Comp1 = () => null;
+
+const Comp2 = () => null;
+
+function FakeComponent({ prop }) {
+  const Component = prop ? Comp1 : Comp2;
+  return _useMemo(() => <Component />, [Component]);
 }
 
 
