@@ -1,3 +1,7 @@
+## v1.1.2 (May 22, 2020)
+
+- Include variables referenced as JSX elements’ components. Closes #16 (dc826654f49630e1e6946c5507d69c2c38b67cca)
+
 ## v1.1.1 (April 6, 2020)
 
 - Ignore static state values. Closes #11 (3e093fd23569ef99791baae2505f8d548a64d807)
